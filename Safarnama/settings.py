@@ -75,10 +75,18 @@ WSGI_APPLICATION = 'Safarnama.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'defaultdb',     # Replace with your Aiven database name
+        'USER': 'avnadmin',          # Replace with your Aiven database username
+        'PASSWORD': 'AVNS_ZBxpNZDSgH38UEicwgp',      # Replace with your Aiven database password
+        'HOST': 'url-shortner-arshgoel16-ba75.e.aivencloud.com',        # Replace with your Aiven database hostname
+        'PORT': '12743',        # Replace with your Aiven database port
+        'OPTIONS': {
+            'sslmode': 'require',         # Enforce SSL for Aiven connections
+        },
     }
 }
 
@@ -131,3 +139,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build',"static")
 
 GEMINI_API_KEY = 'AIzaSyAosXpWbuvwoqQSufXGD9CcC8xTmWJU3vc'
+
+AUTHENTICATION_BACKENDS = {
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend"
+}
+LOGIN_URL = "login"
+LOGOUT_URL = "logout"
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
