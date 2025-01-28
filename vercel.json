@@ -17,7 +17,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "urlShortner/wsgi.py"
+            "dest": "Safarnama/wsgi.py"
         }
     ]
 }
