@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Custom Styles */
+    .progress-bar {
+      background-color: #3b82f6;
+      height: 8px;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Animation styles */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.3s ease forwards;
+    }
+
+    .fade-in-up-delay-1 {
+      animation-delay: 0.1s;
+    }
+
+    .fade-in-up-delay-2 {
+      animation-delay: 0.2s;
+    }
+
+    .fade-in-up-delay-3 {
+      animation-delay: 0.3s;
+    }
+
+    .fade-in-up-delay-4 {
+      animation-delay: 0.4s;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="/images/3.png" alt="Wanderer Logo" class="mr-4" />
+        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Settings Dropdown -->
+        <div class="relative">
+          <button id="settings-btn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300" onclick="toggleDropdown('settings-dropdown')">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V7a4 4 0 118 0v4"></path>
+            </svg>
+          </button>
+          <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left" onclick="toggleTheme()">Toggle Theme</button>
+          </div>
+        </div>
+
+        <!-- Account Dropdown -->
+        <div class="relative">
+          <img id="avatar-btn" src="https://via.placeholder.com/32" alt="User Avatar" class="rounded-full cursor-pointer" onclick="toggleDropdown('account-dropdown')" />
+          <div id="account-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+            <div class="px-4 py-2 text-gray-800">
+              <p class="font-medium">John Doe</p>
+              <p class="text-sm text-gray-600">johndoe@example.com</p>
+            </div>
+            <hr class="my-2">
+            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Tabs Navigation -->
+    <div class="flex space-x-4 mb-8">
+      <button id="overview-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showTab('overview', this)">Overview</button>
+      <button id="trips-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md" onclick="showTab('trips', this)">My Trips</button>
+      <button id="explore-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md" onclick="showTab('explore', this)">Explore</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="fade-in-up">
+      <section class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div class="fade-in-up">
+          <div class="p-4 bg-white shadow-md rounded-lg">
+            <h3 class="text-sm font-medium">Countries Visited</h3>
+            <div class="text-2xl font-bold">0</div>
+          </div>
+        </div>
+        <div class="fade-in-up fade-in-up-delay-1">
+          <div class="p-4 bg-white shadow-md rounded-lg">
+            <h3 class="text-sm font-medium">Cities Explored</h3>
+            <div class="text-2xl font-bold">0</div>
+          </div>
+        </div>
+        <div class="fade-in-up fade-in-up-delay-2">
+          <div class="p-4 bg-white shadow-md rounded-lg">
+            <h3 class="text-sm font-medium">Miles Traveled</h3>
+            <div class="text-2xl font-bold">0</div>
+          </div>
+        </div>
+        <div class="fade-in-up fade-in-up-delay-3">
+          <div class="p-4 bg-white shadow-md rounded-lg">
+            <h3 class="text-sm font-medium">Trips Completed</h3>
+            <div class="text-2xl font-bold">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Trips -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">Upcoming Trips</h2>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="fade-in-up">
+            <div class="bg-white shadow-md rounded-lg">
+              <img src="/images/manali.png" alt="Paris" class="w-full h-40 object-cover rounded-t-lg" />
+              <div class="p-4">
+                <h3 class="font-semibold text-lg mb-2">Manali , India</h3>
+                <p class="text-sm text-gray-600">August 15, 2023</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in-up fade-in-up-delay-1">
+            <div class="bg-white shadow-md rounded-lg">
+              <img src="/images/himachal.jpg" alt="Tokyo" class="w-full h-40 object-cover rounded-t-lg" />
+              <div class="p-4">
+                <h3 class="font-semibold text-lg mb-2">Himachal , India</h3>
+                <p class="text-sm text-gray-600">September 22, 2023</p>
+              </div>
+            </div>
+          </div>
+          <div class="fade-in-up fade-in-up-delay-2">
+            <div class="bg-white shadow-md rounded-lg">
+              <img src="/images/srinagar.png" alt="New York" class="w-full h-40 object-cover rounded-t-lg" />
+              <div class="p-4">
+                <h3 class="font-semibold text-lg mb-2">Srinagar , India</h3>
+                <p class="text-sm text-gray-600">October 5, 2023</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Trips Tab -->
+    <div id="trips" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">My Trips</h2>
+      <p class="text-gray-600">Your trip planning and history will be displayed here.</p>
+    </div>
+
+    <!-- Explore Tab -->
+    <div id="explore" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">Explore Destinations</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="fade-in-up">
+          <div class="bg-white shadow-md rounded-lg">
+            <img src="/images/Gujrat.jpg" alt="Gujrat" class="w-full h-48 object-cover" />
+            <div class="p-4">
+              <h3 class="font-semibold text-lg">Gujrat , India</h3>
+              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in-up fade-in-up-delay-1">
+          <div class="bg-white shadow-md rounded-lg">
+            <img src="/images/goa.png" alt="Bali" class="w-full h-48 object-cover" />
+            <div class="p-4">
+              <h3 class="font-semibold text-lg">Goa , India</h3>
+              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in-up fade-in-up-delay-2">
+          <div class="bg-white shadow-md rounded-lg">
+            <img src="/images/Chardham-Yatra.jpg" alt="Machu Picchu" class="w-full h-48 object-cover" />
+            <div class="p-4">
+              <h3 class="font-semibold text-lg">Char Dham Yatra , India</h3>
+              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    // Toggle dropdown visibility
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      dropdown.classList.toggle('hidden');
+    }
+
+    // Toggle between light and dark theme
+    function toggleTheme() {
+      document.body.classList.toggle('bg-gray-100');
+      document.body.classList.toggle('bg-gray-900');
+      document.body.classList.toggle('text-white');
+    }
+
+    // Show selected tab and update active button
+    function showTab(tab, button) {
+      const tabs = ['overview', 'trips', 'explore'];
+      const buttons = ['overview-btn', 'trips-btn', 'explore-btn'];
+
+      tabs.forEach((t) => {
+        document.getElementById(t).classList.add('hidden');
+      });
+      document.getElementById(tab).classList.remove('hidden');
+
+      buttons.forEach((btnId) => {
+        document.getElementById(btnId).classList.remove('bg-blue-600', 'text-white');
+        document.getElementById(btnId).classList.add('bg-gray-200', 'text-gray-800');
+      });
+
+      button.classList.remove('bg-gray-200', 'text-gray-800');
+      button.classList.add('bg-blue-600', 'text-white');
+    }
+
+    // Trigger initial fade-in animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const elements = document.querySelectorAll('.fade-in-up');
+      elements.forEach(el => {
+        el.classList.add('fade-in-up');
+      });
+    });
+  </script>
+
+</body>
+</html>

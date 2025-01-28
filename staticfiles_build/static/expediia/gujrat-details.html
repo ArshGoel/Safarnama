@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gujarat Trip Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Loader styles */
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .loader {
+      border: 8px solid #e0e0e0;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Page fade-in and fade-out effects */
+    .page-wrapper {
+      position: relative;
+      min-height: 100vh;
+      overflow: auto;
+    }
+
+    .page {
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .page.fade-out {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .page.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animation for trip-day sections */
+    .trip-day {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .trip-day.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animation for images */
+    .trip-day img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .trip-day img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Button hover effects */
+    .button {
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+  <div id="loader" class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <div class="page-wrapper">
+    <div id="page" class="page">
+      <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-900">Gujarat Trip - 7 Days Itinerary</h1>
+        </div>
+      </header>
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+          <h2 class="text-xl font-bold mb-4">Day-by-Day Plan</h2>
+
+          <!-- Day 1 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Arrival+in+Ahmedabad" alt="Arrival in Ahmedabad" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 1: Arrival in Ahmedabad</h3>
+              <ul class="list-disc ml-5">
+                <li>Arrive in Ahmedabad and check into your hotel.</li>
+                <li>Visit the Sabarmati Ashram, where Mahatma Gandhi lived.</li>
+                <li>Explore Sidi Saiyyed Mosque, known for its intricate stone latticework.</li>
+                <li>Visit Kankaria Lake for an evening stroll.</li>
+                <li>Overnight stay in Ahmedabad.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 2 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Ahmedabad+to+Dwarka" alt="Ahmedabad to Dwarka" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 2: Ahmedabad to Dwarka</h3>
+              <ul class="list-disc ml-5">
+                <li>Early morning drive to Dwarka (approx. 8 hours).</li>
+                <li>Check-in at the hotel and visit the famous Dwarkadhish Temple.</li>
+                <li>In the evening, attend the Aarti at the temple.</li>
+                <li>Visit Gomti Ghat nearby.</li>
+                <li>Overnight stay in Dwarka.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 3 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Dwarka+Sightseeing" alt="Dwarka Sightseeing" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 3: Dwarka Sightseeing</h3>
+              <ul class="list-disc ml-5">
+                <li>Visit Bet Dwarka by boat (considered the home of Lord Krishna).</li>
+                <li>Visit the Rukmini Temple and Nageshwar Jyotirlinga, one of the 12 Jyotirlinga shrines.</li>
+                <li>In the evening, enjoy the coastal views and visit Sunset Point.</li>
+                <li>Overnight stay in Dwarka.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 4 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Dwarka+to+Somnath" alt="Dwarka to Somnath" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 4: Dwarka to Somnath</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Somnath (approx. 4 hours).</li>
+                <li>En route, visit Porbandar, the birthplace of Mahatma Gandhi. Visit Kirti Mandir.</li>
+                <li>Reach Somnath and visit the Somnath Temple, another Jyotirlinga.</li>
+                <li>Attend the evening Aarti and the Sound and Light Show at the temple.</li>
+                <li>Overnight stay in Somnath.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 5 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Somnath+to+Gir+National+Park" alt="Somnath to Gir National Park" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 5: Somnath to Gir National Park</h3>
+              <ul class="list-disc ml-5">
+                <li>Early morning visit to Bhalka Tirth, where Lord Krishna is believed to have departed for his heavenly abode.</li>
+                <li>Drive to Gir National Park (approx. 2 hours).</li>
+                <li>Check into a wildlife resort and take an afternoon Jeep Safari to spot the Asiatic lions.</li>
+                <li>Overnight stay near Gir National Park.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 6 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Gir+to+Rajkot" alt="Gir to Rajkot" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 6: Gir to Rajkot</h3>
+              <ul class="list-disc ml-5">
+                <li>Enjoy a morning wildlife safari in Gir National Park.</li>
+                <li>After breakfast, drive to Rajkot (approx. 4 hours).</li>
+                <li>Visit the Watson Museum and Kaba Gandhi No Delo, where Mahatma Gandhi spent his early years.</li>
+                <li>Explore Race Course and enjoy a leisurely evening.</li>
+                <li>Overnight stay in Rajkot.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 7 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Rajkot+to+Ahmedabad" alt="Rajkot to Ahmedabad" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 7: Rajkot to Ahmedabad (Departure)</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive back to Ahmedabad (approx. 4 hours).</li>
+                <li>Visit Adalaj Stepwell and Akshardham Temple in Gandhinagar if time permits.</li>
+                <li>Transfer to the airport or railway station for your departure.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Hide loader after page loads
+    window.addEventListener('load', () => {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('page').classList.add('fade-in');
+      document.querySelectorAll('.trip-day').forEach((element, index) => {
+        setTimeout(() => {
+          element.classList.add('visible');
+        }, 300 * index); // Delay each section's appearance
+      });
+    });
+  </script>
+</body>
+</html>
