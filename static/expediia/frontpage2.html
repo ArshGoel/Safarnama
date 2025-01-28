@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderer - Your Travel Companion</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #f0f4f8, #ffffff);
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 4px 6px rgba(247, 245, 245, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 100px;
+        }
+
+        .nav-links .btn {
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .primary-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .ghost-btn {
+            background-color: transparent;
+            color: #007bff;
+            border: 2px solid #007bff;
+        }
+
+        .ghost-btn:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        main {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('hero-background.jpg') center center / cover no-repeat;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero-text {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .hero-btn {
+            background-color: #ff5733;
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Features Section */
+        .features {
+            display: flex;
+            justify-content: space-between;
+            padding: 50px 0;
+        }
+
+        .feature-card {
+            width: 45%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon img {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Why Choose Section */
+        .why-choose {
+            background-color: #f9f9f9;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .why-choose h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .reasons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .reason {
+            width: 23%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .reason:hover {
+            transform: translateY(-10px);
+        }
+
+        .reason h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .reason p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Call to Action Section */
+        .cta {
+            padding: 50px 0;
+            text-align: center;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-btn {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="/images/3.png" alt="Wanderer Logo">
+            </div>
+            <div class="nav-links">
+                <button class="btn ghost-btn" onclick="navigateTo('login')">Log In</button>
+                <button class="btn primary-btn" onclick="navigateTo('signup')">Sign Up</button> <!-- Sign Up Button -->
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Welcome to Expedia</h1>
+                <p>Your personal travel companion for unforgettable adventures.</p>
+                <button class="btn hero-btn" onclick="navigateTo('home')">Start Your Journey</button> <!-- Redirects based on login status -->
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="/images/2.png" alt="Discover Icon">
+                </div>
+                <h3>Discover Destinations</h3>
+                <p>Explore curated lists of breathtaking locations worldwide.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="/images/1.png" alt="Plan Icon">
+                </div>
+                <h3>Plan with Precision</h3>
+                <p>Create detailed itineraries with our smart planning tools.</p>
+            </div>
+        </section>
+
+        <section class="why-choose">
+            <h2>Why Choose Expedia?</h2>
+            <div class="reasons">
+                <div class="reason">
+                    <h3>Personalized Recommendations</h3>
+                    <p>Our AI-powered system learns your preferences to suggest the perfect destinations and activities.</p>
+                </div>
+                <div class="reason">
+                    <h3>Real-time Updates</h3>
+                    <p>Stay informed with live travel alerts, weather forecasts, and local event notifications.</p>
+                </div>
+                <div class="reason">
+                    <h3>Budget-friendly Options</h3>
+                    <p>Find the best deals on flights, accommodations, and activities to make your dream trip affordable.</p>
+                </div>
+                <div class="reason">
+                    <h3>Seamless Booking</h3>
+                    <p>Book flights, hotels, and activities all in one place with our easy-to-use interface.</p>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h3>Expedia</h3>
+                <p>Explore, plan, and travel effortlessly with Expedia.</p>
+            </div>
+            <div>
+                <h3>Contact Us</h3>
+                <p>Email: support@Expedia.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to check if the user is logged in
+        function isLoggedIn() {
+            // Check for a login token or session data (e.g., a JWT in localStorage)
+            return localStorage.getItem('authToken') !== null; // Replace 'authToken' with your actual token name
+        }
+
+        // Function to navigate based on login status
+        function navigateTo(page) {
+            let url;
+            if (page === 'home' && isLoggedIn()) {
+                url = 'home.html'; // Redirect to home page if logged in
+            } else if (page === 'home' && !isLoggedIn()) {
+                url = 'login.html'; // Redirect to login page if not logged in
+            } else {
+                url = `${page}.html`; // For other buttons like "Sign Up" and "Log In"
+            }
+            window.location.href = url;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.feature-card, .reason, .cta').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

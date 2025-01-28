@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manali Trip Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .trip-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1rem;
+      background: #f9fafb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .trip-day img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      object-fit: cover;
+      border-right: 0.5px solid #e2e8f0;
+    }
+
+    .trip-day-content {
+      padding: 1rem;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Delays for animations */
+    .trip-day:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    .trip-day:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .trip-day:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+    .trip-day:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+    .trip-day:nth-child(5) {
+      animation-delay: 0.5s;
+    }
+    .trip-day:nth-child(6) {
+      animation-delay: 0.6s;
+    }
+    .trip-day:nth-child(7) {
+      animation-delay: 0.7s;
+    }
+
+    /* Button hover effect */
+    button:hover {
+      background-color: #2563eb;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-900">Manali Trip - 7 Days Itinerary</h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <section class="bg-white shadow-md rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Day-by-Day Plan</h2>
+      
+      <!-- Day 1 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Manali+Market" alt="Manali Market">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 1: Arrival in Manali</h3>
+          <p>Check-in at the hotel, explore local markets, and stroll through Mall Road.</p>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Solang+Valley" alt="Solang Valley">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 2: Solang Valley</h3>
+          <p>Visit Solang Valley for adventure activities like paragliding and skiing.</p>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Rohtang+Pass" alt="Rohtang Pass">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 3: Rohtang Pass</h3>
+          <p>Full-day excursion to Rohtang Pass, enjoy the scenic views and snow activities.</p>
+        </div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Hadimba+Temple" alt="Hadimba Temple">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 4: Cultural Exploration</h3>
+          <p>Explore cultural sites including Hadimba Temple, Manu Temple, and Vashisht hot springs.</p>
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Jogini+Waterfalls" alt="Jogini Waterfalls">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 5: Trekking</h3>
+          <p>Trek to Jogini Waterfalls and visit Old Manali for a quaint experience.</p>
+        </div>
+      </div>
+
+      <!-- Day 6 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=River+Rafting" alt="River Rafting">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 6: Adventure and History</h3>
+          <p>Enjoy river rafting at Kullu and explore the historical Naggar Castle.</p>
+        </div>
+      </div>
+
+      <!-- Day 7 -->
+      <div class="trip-day">
+        <img src="https://via.placeholder.com/250x150?text=Shopping+in+Manali" alt="Shopping in Manali">
+        <div class="trip-day-content">
+          <h3 class="text-lg font-semibold">Day 7: Leisure and Departure</h3>
+          <p>Free time for shopping and leisure activities, followed by departure.</p>
+        </div>
+      </div>
+
+      <button class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md transition-colors duration-200" onclick="location.href='home.html'">Back to Homepage</button>
+    </section>
+  </main>
+</body>
+</html>

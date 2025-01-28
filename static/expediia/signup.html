@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .error-alert {
+            background-color: #fdd;
+            border: 1px solid #faa;
+            color: #d33;
+        }
+        .button-hover:hover {
+            transform: scale(1.05);
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 p-4">
+    <div class="w-full max-w-md">
+        <div class="card w-full p-6 rounded-lg">
+            <div class="text-center space-y-1">
+                <h2 class="text-3xl font-bold text-blue-600">Create an account</h2>
+                <p class="text-gray-600">Enter your details to sign up</p>
+            </div>
+            <form id="signupForm" class="space-y-4 mt-4">
+                <div class="space-y-2">
+                    <label for="name" class="text-sm font-semibold text-gray-700">Full Name</label>
+                    <input id="name" type="text" placeholder="John Doe" required
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <div class="space-y-2">
+                    <label for="email" class="text-sm font-semibold text-gray-700">Email</label>
+                    <input id="email" type="email" placeholder="john@example.com" required
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <div class="space-y-2">
+                    <label for="password" class="text-sm font-semibold text-gray-700">Password</label>
+                    <input id="password" type="password" required
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <div class="space-y-2">
+                    <label for="confirm-password" class="text-sm font-semibold text-gray-700">Confirm Password</label>
+                    <input id="confirm-password" type="password" required
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <div id="errorAlert" class="hidden mt-4 px-4 py-3 rounded error-alert"></div>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform button-hover">
+                    Sign Up
+                </button>
+            </form>
+            <div class="flex flex-col items-center space-y-4 mt-4">
+                <p class="text-sm text-gray-600">Already have an account? 
+                    <a href="login.html" class="text-blue-600 hover:underline font-semibold">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const signupForm = document.getElementById('signupForm');
+        const errorAlert = document.getElementById('errorAlert');
+
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            errorAlert.classList.add('hidden');
+            errorAlert.textContent = '';
+
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long');
+                return;
+            }
+
+            // Store credentials in local storage
+            localStorage.setItem('signupEmail', email);
+            localStorage.setItem('signupPassword', password);
+
+            console.log('Signup successful with:', { name, email });
+
+            // Redirect to signup success page
+            window.location.href = 'signupsucc.html';
+        });
+
+        function showError(message) {
+            errorAlert.textContent = message;
+            errorAlert.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

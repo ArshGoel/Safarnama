@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home | Safarnama{% endblock title %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #F5F4FF;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #6C5CE7;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6C5CE7;
+        }
+
+        .sign-up {
+            padding: 10px 24px;
+            background-color: #6C5CE7;
+            color: white !important;
+            border-radius: 25px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #2D3436;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: #636E72;
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 16px 24px 16px 48px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Destinations */
+        .destinations {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 80px 20px;
+            flex-wrap: wrap;
+        }
+
+        .destination-card {
+            width: 300px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .destination-content {
+            padding: 24px;
+        }
+
+        .destination-content h3 {
+            font-size: 24px;
+            color: #2D3436;
+            margin-bottom: 12px;
+        }
+
+        .destination-content p {
+            color: #636E72;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .destinations {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+<body>
+    <section class="hero">
+        <h1>Discover the Best<br>Place Welcome!</h1>
+        <p>For a very low cost, visit every beautiful place on the planet. The ascent to the summit of the location is never lengthier than you expect.</p>
+        <div class="search-container">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-bar" placeholder="Start your search">
+        </div>
+    </section>
+
+    <div class="destinations">
+        <div class="destination-card">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0xeP9soJmGvRGd1C6XDksWwgFyLXHB.png" alt="Paris" class="destination-image">
+            <div class="destination-content">
+                <h3>Paris, France</h3>
+                <p>Paris, France's capital, is a major European city and a global center for art, fashion, gastronomy and culture.</p>
+            </div>
+        </div>
+        <div class="destination-card">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0xeP9soJmGvRGd1C6XDksWwgFyLXHB.png" alt="Dubai" class="destination-image">
+            <div class="destination-content">
+                <h3>Dubai, UAE</h3>
+                <p>Dubai is a city and emirate in the United Arab Emirates known for luxury shopping, ultramodern architecture and a lively nightlife scene</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

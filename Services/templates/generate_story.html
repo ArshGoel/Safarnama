@@ -1,0 +1,24 @@
+<!-- generate_story.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Story with Gemini AI</title>
+</head>
+<body>
+    <h1>Generate Story with Gemini AI</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="prompt">Enter your prompt:</label><br>
+        <textarea id="prompt" name="prompt" rows="4" cols="50" placeholder="Type your story prompt here"></textarea><br>
+        <button type="submit">Generate Story</button>
+    </form>
+
+    <h2>Generated Response:</h2>
+    {% if generated_text %}
+        <p>{{ generated_text }}</p>
+    {% endif %}
+</body>
+</html>
