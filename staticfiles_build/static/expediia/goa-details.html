@@ -121,8 +121,9 @@
               </ul>
             </div>
           </div>
-
-          <button class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md transition-colors duration-200" id="backButton">Back to Homepage</button>
+          <a href="/dashboard">
+            <button class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md transition-colors duration-200" >Back to Homepage</button>
+          </a>  
         </section>
       </main>
     </div>
@@ -136,12 +137,12 @@
       page.classList.add('fade-in');
     });
 
-    document.getElementById('backButton').addEventListener('click', function() {
-      document.getElementById('page').classList.add('fade-out');
-      setTimeout(function() {
-        window.location.href = 'home.html';
-      }, 500);
-    });
+    // document.getElementById('backButton').addEventListener('click', function() {
+    //   document.getElementById('page').classList.add('fade-out');
+    //   setTimeout(function() {
+    //     window.location.href = 'home.html';
+    //   }, 500);
+    // });
   </script>
 </body>
 </html>
