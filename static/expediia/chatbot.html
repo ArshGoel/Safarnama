@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanderer Travel Planner Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      width: 600px; /* Increased width */
+      height: 700px;
+      background-color: white;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chat-header {
+      background: linear-gradient(90deg, #4CAF50, #3b82f6);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header p {
+      margin: 5px 0 0;
+      font-size: 12px;
+      color: #d0e6ff;
+    }
+
+    .back-button {
+      background-color: white;
+      color: #4CAF50;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .back-button:hover {
+      background-color: #ddd;
+    }
+
+    .chat-content {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .chat-message {
+      display: flex;
+      margin-bottom: 10px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .chat-message.user {
+      justify-content: flex-end;
+    }
+
+    .chat-message.bot {
+      justify-content: flex-start;
+    }
+
+    .chat-message .avatar {
+      width: 30px;
+      height: 30px;
+      background-color: #ddd;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .chat-message.user .avatar {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    .message-text {
+      max-width: 70%;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #e0e0e0;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .chat-message.user .message-text {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .chat-footer {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-footer input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .chat-footer button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .chat-footer button:hover {
+      background-color: #45a049;
+    }
+
+    .suggested-buttons {
+      display: flex;
+      overflow-x: auto;
+      margin-bottom: 10px;
+    }
+
+    .suggested-buttons button {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      margin-right: 8px;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .suggested-buttons button:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">
+    <button class="back-button" onclick="goBack()">Back</button>
+    Wanderer Travel Planner
+    <p>Your AI-powered travel assistant</p>
+  </div>
+  <div id="chat-content" class="chat-content">
+    <!-- Initial Bot Message -->
+    <div class="chat-message bot">
+      <div class="avatar">B</div>
+      <div class="message-text">Welcome to Wanderer's Travel Planner! I'm here to assist you with your travel plans. How can I help you today?</div>
+    </div>
+  </div>
+  <div class="suggested-buttons" id="suggested-buttons">
+    <!-- Suggested Responses -->
+    <button onclick="handleSuggestedResponse('Popular destinations')">Popular destinations</button>
+    <button onclick="handleSuggestedResponse('Best time to visit')">Best time to visit</button>
+    <button onclick="handleSuggestedResponse('Budget-friendly options')">Budget-friendly options</button>
+    <button onclick="handleSuggestedResponse('Flight information')">Flight information</button>
+  </div>
+  <div class="chat-footer">
+    <input id="chat-input" type="text" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+    <button onclick="handleSend()">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatContent = document.getElementById('chat-content');
+  const chatInput = document.getElementById('chat-input');
+  
+  function goBack() {
+    window.location.href = 'home.html';  // Redirect to home.html
+  }
+
+  function addMessage(text, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message', sender);
+
+    const avatarDiv = document.createElement('div');
+    avatarDiv.classList.add('avatar');
+    avatarDiv.textContent = sender === 'user' ? 'U' : 'B';
+
+    const messageTextDiv = document.createElement('div');
+    messageTextDiv.classList.add('message-text');
+    messageTextDiv.textContent = text;
+
+    messageDiv.appendChild(avatarDiv);
+    messageDiv.appendChild(messageTextDiv);
+
+    chatContent.appendChild(messageDiv);
+    chatContent.scrollTop = chatContent.scrollHeight;  // Scroll to the latest message
+  }
+
+  function handleSend() {
+    const inputText = chatInput.value.trim();
+
+    if (inputText) {
+      addMessage(inputText, 'user');
+      chatInput.value = '';
+
+      setTimeout(() => {
+        const botResponse = generateBotResponse(inputText);
+        addMessage(botResponse, 'bot');
+      }, 500); // Reduced bot response time
+    }
+  }
+
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      handleSend();
+    }
+  }
+
+  function handleSuggestedResponse(responseText) {
+    chatInput.value = responseText;
+  }
+
+  
+</script>
+
+</body>
+</html>

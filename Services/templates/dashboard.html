@@ -5,242 +5,311 @@
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* Custom Styles */
-    .progress-bar {
-      background-color: #3b82f6;
-      height: 8px;
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        .progress-bar {
+            background-color: #3b82f6;
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
 
-    .hidden {
-      display: none;
-    }
+        .hidden {
+            display: none;
+        }
 
-    /* Animation styles */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        /* Animation styles */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-    .fade-in-up {
-      animation: fadeInUp 0.3s ease forwards;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .fade-in-up-delay-1 {
-      animation-delay: 0.1s;
-    }
+        .fade-in-up {
+            animation: fadeInUp 0.3s ease forwards;
+        }
 
-    .fade-in-up-delay-2 {
-      animation-delay: 0.2s;
-    }
+        .fade-in-up-delay-1 {
+            animation-delay: 0.1s;
+        }
 
-    .fade-in-up-delay-3 {
-      animation-delay: 0.3s;
-    }
+        .fade-in-up-delay-2 {
+            animation-delay: 0.2s;
+        }
 
-    .fade-in-up-delay-4 {
-      animation-delay: 0.4s;
-    }
+        .fade-in-up-delay-3 {
+            animation-delay: 0.3s;
+        }
 
-    /* Tab button hover effects */
-    .tab-button {
-      transition: background-color 0.3s, color 0.3s;
-    }
+        .fade-in-up-delay-4 {
+            animation-delay: 0.4s;
+        }
 
-    .tab-button:hover {
-      background-color: #2563eb; /* Change to a darker blue on hover */
-      color: white;
-      cursor: pointer;
-    }
+        /* Tab button hover effects */
+        .tab-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Ensure uniform box sizes */
-    .trip-box {
-      min-height: 12rem; /* Adjust this value to match your needs */
-    }
-  </style>
+        .tab-button:hover {
+            background-color: #2563eb;
+            /* Change to a darker blue on hover */
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Ensure uniform box sizes */
+        .trip-box {
+            min-height: 12rem;
+            /* Adjust this value to match your needs */
+        }
+    </style>
 </head>
+
 <body class="min-h-screen bg-gray-100">
-
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Tabs Navigation -->
-    <div class="flex space-x-4 mb-8">
-      <button id="overview-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md tab-button" onclick="showTab('overview', this)">Overview</button>
-      <button id="trips-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md tab-button" onclick="showTab('trips', this)">My Trips</button>
-      <button id="explore-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md tab-button" onclick="showTab('explore', this)">Explore</button>
-    </div>
-
-    <!-- Overview Tab -->
-    <div id="overview" class="fade-in-up">
-      <section class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        <div class="fade-in-up">
-          <div class="p-4 bg-white shadow-md rounded-lg trip-box">
-            <h3 class="text-sm font-medium">Countries Visited</h3>
-            <div class="text-2xl font-bold">0</div>
-          </div>
-        </div>
-        <div class="fade-in-up fade-in-up-delay-1">
-          <div class="p-4 bg-white shadow-md rounded-lg trip-box">
-            <h3 class="text-sm font-medium">Cities Explored</h3>
-            <div class="text-2xl font-bold">0</div>
-          </div>
-        </div>
-        <div class="fade-in-up fade-in-up-delay-2">
-          <div class="p-4 bg-white shadow-md rounded-lg trip-box">
-            <h3 class="text-sm font-medium">Miles Traveled</h3>
-            <div class="text-2xl font-bold">0</div>
-          </div>
-        </div>
-        <div class="fade-in-up fade-in-up-delay-3">
-          <div class="p-4 bg-white shadow-md rounded-lg trip-box">
-            <h3 class="text-sm font-medium">Trips Completed</h3>
-            <div class="text-2xl font-bold">0</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Upcoming Trips -->
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">Upcoming Trips</h2>
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div class="fade-in-up" onclick="location.href='manali-details.html'">
-            <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-              <img src="{% static "images/manali.png" %}" alt="Manali" class="w-full h-40 object-cover rounded-t-lg" />
-              <div class="p-4">
-                <h3 class="font-semibold text-lg mb-2">Manali, India</h3>
-                <p class="text-sm text-gray-600">August 15, 2023</p>
-              </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav>
+            <div class="sidebar-item" onclick="location.href='{% static "
+                    expediia/index.html" %}'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span>Dashboard</span>
             </div>
-          </div>
-          <div class="fade-in-up fade-in-up-delay-1" onclick="location.href='himachal-details.html'">
-            <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-              <img src="{% static "images/himachal.jpg" %}" alt="Himachal" class="w-full h-40 object-cover rounded-t-lg" />
-              <div class="p-4">
-                <h3 class="font-semibold text-lg mb-2">Himachal, India</h3>
-                <p class="text-sm text-gray-600">September 22, 2023</p>
-              </div>
+            <div class="sidebar-item" onclick="location.href='{% static "
+                    expediia/chatbot.html" %}'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16h6M5 8h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2z" />
+                </svg>
+                <span>Chatbot</span>
             </div>
-          </div>
-          <div class="fade-in-up fade-in-up-delay-2" onclick="location.href='srinagar-details.html'">
-            <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-              <img src="{% static "images/srinagar.png" %}" alt="Srinagar" class="w-full h-40 object-cover rounded-t-lg" />
-              <div class="p-4">
-                <h3 class="font-semibold text-lg mb-2">Srinagar, India</h3>
-                <p class="text-sm text-gray-600">October 5, 2023</p>
-              </div>
+            <div class="sidebar-item" onclick="location.href='news.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                <span>News</span>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Recent Activities Section -->
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">Recent Activities</h2>
-        <ul class="bg-white shadow-md rounded-lg p-4">
-          <li class="mb-2">
-            <span class="text-gray-700">Booked a trip to Manali, India on August 10, 2023.</span>
-          </li>
-          <li class="mb-2">
-            <span class="text-gray-700">Completed a trip to Goa, India on July 5, 2023.</span>
-          </li>
-          <li>
-            <span class="text-gray-700">Added a new destination to the wish list: Maldives.</span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Statistics Section -->
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">Statistics</h2>
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div class="bg-white shadow-md rounded-lg p-4">
-            <h3 class="font-semibold text-lg mb-2">Trips Per Month</h3>
-            <!-- Placeholder for a bar chart or other statistical representation -->
-            <div class="h-32 bg-gray-200 rounded-md"></div>
-          </div>
-          <div class="bg-white shadow-md rounded-lg p-4">
-            <h3 class="font-semibold text-lg mb-2">Top Destinations</h3>
-            <!-- Placeholder for a pie chart or other statistical representation -->
-            <div class="h-32 bg-gray-200 rounded-md"></div>
-          </div>
-          <div class="bg-white shadow-md rounded-lg p-4">
-            <h3 class="font-semibold text-lg mb-2">Travel Expenses</h3>
-            <!-- Placeholder for a line chart or other statistical representation -->
-            <div class="h-32 bg-gray-200 rounded-md"></div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- My Trips Tab -->
-    <div id="trips" class="hidden fade-in-up">
-      <h2 class="text-2xl font-bold mb-4">My Trips</h2>
-      <p class="text-gray-600">You haven't planned any trips yet.</p>
-    </div>
-
-    <!-- Explore Tab -->
-    <div id="explore" class="hidden fade-in-up">
-      <h2 class="text-2xl font-bold mb-4">Explore Destinations</h2>
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div class="fade-in-up" onclick="location.href='gujrat-details.html'">
-          <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-            <img src="{% static "images/Gujrat.jpg" %}" alt="Gujrat" class="w-full h-48 object-cover" />
-            <div class="p-4">
-              <h3 class="font-semibold text-lg">Gujrat, India</h3>
-              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            <div class="sidebar-item" onclick="location.href='documentation.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Documentation</span>
             </div>
-          </div>
-        </div>
-        <div class="fade-in-up fade-in-up-delay-1" onclick="location.href='goa-details.html'">
-          <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-            <img src="{% static "images/goa.png" %}" alt="Goa" class="w-full h-48 object-cover" />
-            <div class="p-4">
-              <h3 class="font-semibold text-lg">Goa, India</h3>
-              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            <div class="sidebar-item" onclick="location.href='itinerary.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <span>Itinerary</span>
             </div>
-          </div>
-        </div>
-        <div class="fade-in-up fade-in-up-delay-2" onclick="location.href='chardham-details.html'">
-          <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
-            <img src="{% static "images/Chardham-Yatra.jpg" %}" alt="Chardham Yatra" class="w-full h-48 object-cover" />
-            <div class="p-4">
-              <h3 class="font-semibold text-lg">Chardham Yatra, India</h3>
-              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+            <div class="sidebar-item" onclick="location.href='book-trip.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Book a Trip</span>
             </div>
-          </div>
+        </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Tabs Navigation -->
+        <div class="flex space-x-4 mb-8">
+            <button id="explore-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md tab-button"
+                onclick="showTab('explore', this)">Explore</button>
+            <button id="trips-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md tab-button"
+                onclick="showTab('trips', this)">My Trips</button>
+            <button id="overview-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md tab-button"
+                onclick="showTab('overview', this)">Overview</button>
         </div>
-      </div>
-    </div>
-  </main>
 
-  <!-- Scripts -->
-  <script>
-    function showTab(tab, element) {
-      const tabs = ['overview', 'trips', 'explore'];
-      tabs.forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-        document.getElementById(id + '-btn').classList.remove('bg-blue-600', 'text-white');
-        document.getElementById(id + '-btn').classList.add('bg-gray-200', 'text-gray-800');
-      });
-      document.getElementById(tab).classList.remove('hidden');
-      element.classList.remove('bg-gray-200', 'text-gray-800');
-      element.classList.add('bg-blue-600', 'text-white');
-    }
-  </script>
+        <!-- Explore Tab -->
+        <div id="explore" class="hidden fade-in-up">
+            <h2 class="text-2xl font-bold mb-4">Explore Destinations</h2>
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div class="fade-in-up" onclick="location.href='gujrat-details.html'">
+                    <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                        <img src="{% static " images/Gujrat.jpg" %}" alt="Gujrat" class="w-full h-48 object-cover" />
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">Gujrat, India</h3>
+                            <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-in-up fade-in-up-delay-1" onclick="location.href='{% static "
+                    expediia/goa-details.html" %}'">
+                    <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                        <img src="{% static " images/goa.png" %}" alt="Goa" class="w-full h-48 object-cover" />
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">Goa, India</h3>
+                            <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-in-up fade-in-up-delay-2" onclick="location.href='chardham-details.html'">
+                    <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                        <img src="{% static " images/Chardham-Yatra.jpg" %}" alt="Chardham Yatra"
+                            class="w-full h-48 object-cover" />
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">Chardham Yatra, India</h3>
+                            <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Trips Tab -->
+        <div id="trips" class="hidden fade-in-up">
+            <h2 class="text-2xl font-bold mb-4">My Trips</h2>
+            <p class="text-gray-600">You haven't planned any trips yet.</p>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="fade-in-up">
+            <section class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                <div class="fade-in-up">
+                    <div class="p-4 bg-white shadow-md rounded-lg trip-box">
+                        <h3 class="text-sm font-medium">Countries Visited</h3>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+                <div class="fade-in-up fade-in-up-delay-1">
+                    <div class="p-4 bg-white shadow-md rounded-lg trip-box">
+                        <h3 class="text-sm font-medium">Cities Explored</h3>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+                <div class="fade-in-up fade-in-up-delay-2">
+                    <div class="p-4 bg-white shadow-md rounded-lg trip-box">
+                        <h3 class="text-sm font-medium">Miles Traveled</h3>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+                <div class="fade-in-up fade-in-up-delay-3">
+                    <div class="p-4 bg-white shadow-md rounded-lg trip-box">
+                        <h3 class="text-sm font-medium">Trips Completed</h3>
+                        <div class="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+            </section>
+            <!-- Upcoming Trips -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Upcoming Trips</h2>
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div class="fade-in-up" onclick="location.href='manali-details.html'">
+                        <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                            <img src="{% static " images/manali.png" %}" alt="Manali"
+                                class="w-full h-40 object-cover rounded-t-lg" />
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Manali, India</h3>
+                                <p class="text-sm text-gray-600">August 15, 2023</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fade-in-up fade-in-up-delay-1" onclick="location.href='himachal-details.html'">
+                        <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                            <img src="{% static " images/himachal.jpg" %}" alt="Himachal"
+                                class="w-full h-40 object-cover rounded-t-lg" />
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Himachal, India</h3>
+                                <p class="text-sm text-gray-600">September 22, 2023</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fade-in-up fade-in-up-delay-2" onclick="location.href='srinagar-details.html'">
+                        <div class="bg-white shadow-md rounded-lg trip-box cursor-pointer">
+                            <img src="{% static " images/srinagar.png" %}" alt="Srinagar"
+                                class="w-full h-40 object-cover rounded-t-lg" />
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-2">Srinagar, India</h3>
+                                <p class="text-sm text-gray-600">October 5, 2023</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activities Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Recent Activities</h2>
+                <ul class="bg-white shadow-md rounded-lg p-4">
+                    <li class="mb-2">
+                        <span class="text-gray-700">Booked a trip to Manali, India on August 10, 2023.</span>
+                    </li>
+                    <li class="mb-2">
+                        <span class="text-gray-700">Completed a trip to Goa, India on July 5, 2023.</span>
+                    </li>
+                    <li>
+                        <span class="text-gray-700">Added a new destination to the wish list: Maldives.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Statistics</h2>
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div class="bg-white shadow-md rounded-lg p-4">
+                        <h3 class="font-semibold text-lg mb-2">Trips Per Month</h3>
+                        <!-- Placeholder for a bar chart or other statistical representation -->
+                        <div class="h-32 bg-gray-200 rounded-md"></div>
+                    </div>
+                    <div class="bg-white shadow-md rounded-lg p-4">
+                        <h3 class="font-semibold text-lg mb-2">Top Destinations</h3>
+                        <!-- Placeholder for a pie chart or other statistical representation -->
+                        <div class="h-32 bg-gray-200 rounded-md"></div>
+                    </div>
+                    <div class="bg-white shadow-md rounded-lg p-4">
+                        <h3 class="font-semibold text-lg mb-2">Travel Expenses</h3>
+                        <!-- Placeholder for a line chart or other statistical representation -->
+                        <div class="h-32 bg-gray-200 rounded-md"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        function showTab(tab, element) {
+            const tabs = ['explore', 'trips', 'overview'];
+            tabs.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.getElementById(id + '-btn').classList.remove('bg-blue-600', 'text-white');
+                document.getElementById(id + '-btn').classList.add('bg-gray-200', 'text-gray-800');
+            });
+            document.getElementById(tab).classList.remove('hidden');
+            element.classList.remove('bg-gray-200', 'text-gray-800');
+            element.classList.add('bg-blue-600', 'text-white');
+        }
+    </script>
 </body>
+
 </html>
 
 {% endblock content %}
