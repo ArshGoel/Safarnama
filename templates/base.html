@@ -27,6 +27,18 @@
                     <li class="nav-item " >
                         <a class="nav-link {% block dashboardactive %}{% endblock dashboardactive %}" aria-current="page" href="{%url 'dashboard'%}">Dashboard</a>
                     </li>
+                    <li class="nav-item " >
+                        <a class="nav-link {% block chatbotactive %}{% endblock chatbotactive %}" aria-current="page" href="{%url 'chatbot'%}">Chatbot</a>
+                    </li>
+                    <li class="nav-item " >
+                        <a class="nav-link {% block itineraryactive %}{% endblock itineraryactive %}" aria-current="page" href="{%url 'itinery'%}">Itinerary</a>
+                    </li>
+                    <li class="nav-item " >
+                        <a class="nav-link {% block documentationactive %}{% endblock documentationactive %}" aria-current="page" href="{%url 'documentation'%}">Documentation</a>
+                    </li>
+                    <li class="nav-item " >
+                        <a class="nav-link {% block get_weatheractive %}{% endblock get_weatheractive %}" aria-current="page" href="{%url 'get_weather'%}">Weather</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link " href="{%url 'logout'%}">Logout</a>
                     </li>

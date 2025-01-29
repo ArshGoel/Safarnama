@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: linear-gradient(to bottom,rgb(255, 255, 255),rgb(255, 255, 255));
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 50%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="container text-center">
+        <h1 class="display-3">Weather Forecast</h1>
+        <p class="lead">Get the latest 5-day weather forecast for any location.</p>
+        <button id="start-button" class="btn btn-primary">Start</button>
+    </div>
+
+    <!-- Location Input Page -->
+    <div id="location-page" class="container text-center hidden">
+        <h1>Enter Location</h1>
+        <input id="location-input" type="text" class="form-control my-2" placeholder="Enter city name">
+        <button id="back-button" class="btn btn-secondary me-2">Back</button>
+        <button id="get-weather-button" class="btn btn-primary">Get Weather</button>
+    </div>
+
+    <!-- Weather Display Page -->
+    <div id="weather-page" class="container text-center hidden">
+        <h1 id="location-name"></h1>
+        <p id="weather-description"></p>
+        <p id="temperature"></p>
+        <p id="wind-speed"></p>
+        <h2>5-Day Forecast</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>High Temp</th>
+                    <th>Low Temp</th>
+                    <th>Precipitation</th>
+                </tr>
+            </thead>
+            <tbody id="forecast-table-body"></tbody>
+        </table>
+        <button id="back-to-location-button" class="btn btn-secondary">Back to Location</button>
+    </div>
+
+    <!-- Error Page -->
+    <div id="error-page" class="container text-center hidden">
+        <h1>Error</h1>
+        <p id="error-message"></p>
+        <button id="back-to-location-button-error" class="btn btn-secondary">Back to Location</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/search";
+            const OPEN_METEO_API_URL = "https://api.open-meteo.com/v1/forecast";
+
+            const landingPage = document.getElementById("landing-page");
+            const locationPage = document.getElementById("location-page");
+            const weatherPage = document.getElementById("weather-page");
+            const errorPage = document.getElementById("error-page");
+            
+            const locationInput = document.getElementById("location-input");
+            const forecastTableBody = document.getElementById("forecast-table-body");
+
+            // Buttons
+            document.getElementById("start-button").addEventListener("click", () => {
+                landingPage.classList.add("hidden");
+                locationPage.classList.remove("hidden");
+            });
+
+            document.getElementById("back-button").addEventListener("click", () => {
+                locationPage.classList.add("hidden");
+                landingPage.classList.remove("hidden");
+            });
+
+            document.getElementById("get-weather-button").addEventListener("click", fetchWeather);
+
+            document.getElementById("back-to-location-button").addEventListener("click", () => {
+                weatherPage.classList.add("hidden");
+                locationPage.classList.remove("hidden");
+            });
+
+            document.getElementById("back-to-location-button-error").addEventListener("click", () => {
+                errorPage.classList.add("hidden");
+                locationPage.classList.remove("hidden");
+            });
+
+            function fetchWeather() {
+                const location = locationInput.value;
+                if (!location) {
+                    showError("Please enter a location");
+                    return;
+                }
+
+                locationPage.classList.add("hidden");
+
+                fetch(`${NOMINATIM_API_URL}?q=${location}&format=json&limit=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) throw new Error("Location not found.");
+
+                        const { lat, lon } = data[0];
+
+                        return fetch(`${OPEN_METEO_API_URL}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum`);
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const currentWeather = data.current_weather;
+                        const forecast = data.daily;
+                        
+                        document.getElementById("location-name").textContent = locationInput.value;
+                        document.getElementById("weather-description").textContent = `Weather: ${getWeatherDescription(currentWeather.weathercode)}`;
+                        document.getElementById("temperature").textContent = `Temperature: ${currentWeather.temperature}°C`;
+                        document.getElementById("wind-speed").textContent = `Wind Speed: ${currentWeather.windspeed} km/h`;
+
+                        forecastTableBody.innerHTML = "";
+                        for (let i = 0; i < forecast.time.length; i++) {
+                            const row = `<tr>
+                                <td>${forecast.time[i].split("T")[0]}</td>
+                                <td>${forecast.temperature_2m_max[i]}°C</td>
+                                <td>${forecast.temperature_2m_min[i]}°C</td>
+                                <td>${forecast.precipitation_sum[i]} mm</td>
+                            </tr>`;
+                            forecastTableBody.innerHTML += row;
+                        }
+
+                        weatherPage.classList.remove("hidden");
+                    })
+                    .catch(error => showError(error.message));
+            }
+
+            function showError(message) {
+                document.getElementById("error-message").textContent = message;
+                errorPage.classList.remove("hidden");
+            }
+
+            function getWeatherDescription(code) {
+                const descriptions = {
+                    0: "Clear sky",
+                    1: "Mainly clear",
+                    2: "Partly cloudy",
+                    3: "Overcast",
+                    45: "Fog",
+                    51: "Light drizzle",
+                    61: "Slight rain",
+                    63: "Moderate rain",
+                    65: "Heavy rain",
+                    71: "Slight snowfall",
+                    75: "Heavy snowfall",
+                    80: "Rain showers",
+                    95: "Thunderstorm",
+                };
+                return descriptions[code] || "Unknown weather";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -165,36 +165,139 @@
                 padding: 40px 20px;
             }
         }
+        /* Why Choose Section */
+        .why-choose {
+            background-color: #f9f9f9;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .why-choose h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        /* Why Choose Section */
+        .why-choose {
+            background-color: #f9f9f9;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .why-choose h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .reasons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .reason {
+            width: 23%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .reason:hover {
+            transform: translateY(-10px);
+        }
+
+        .reason h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .reason p {
+            font-size: 1rem;
+            color: #666;
+        }
     </style>
 <body>
     <section class="hero">
-        <h1>Discover the Best<br>Place Welcome!</h1>
+        <h1>Explore the World with<br>Ease</h1>
         <p>For a very low cost, visit every beautiful place on the planet. The ascent to the summit of the location is never lengthier than you expect.</p>
-        <div class="search-container">
-            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" class="search-bar" placeholder="Start your search">
-        </div>
     </section>
 
     <div class="destinations">
         <div class="destination-card">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0xeP9soJmGvRGd1C6XDksWwgFyLXHB.png" alt="Paris" class="destination-image">
+            <img src={% static "images/image.png" %} alt="Goa" class="destination-image">
             <div class="destination-content">
-                <h3>Paris, France</h3>
-                <p>Paris, France's capital, is a major European city and a global center for art, fashion, gastronomy and culture.</p>
+                <h3>Goa, India</h3>
+                <p>Goa is a popular tourist destination in India, known for its stunning beaches, vibrant nightlife, Portuguese heritage, and rich culture.</p>
             </div>
         </div>
         <div class="destination-card">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0xeP9soJmGvRGd1C6XDksWwgFyLXHB.png" alt="Dubai" class="destination-image">
+            <img src={% static "images/image1.png" %} alt="Dubai" class="destination-image">
             <div class="destination-content">
-                <h3>Dubai, UAE</h3>
-                <p>Dubai is a city and emirate in the United Arab Emirates known for luxury shopping, ultramodern architecture and a lively nightlife scene</p>
+                <h3>Manali, India</h3>
+                <p>Manali is a popular hill station in the Indian state of Himachal Pradesh, situated in the northern part of India. It's renowned for its breathtaking landscapes, scenic beauty, and adventure sports.</p>
             </div>
         </div>
     </div>
+    <section class="why-choose">
+        <h2>Why Choose Safarnama?</h2>
+        <div class="reasons">
+            <div class="reason">
+                <h3>Personalized Recommendations</h3>
+                <p>Our AI-powered system learns your preferences to suggest the perfect destinations and activities.</p>
+            </div>
+            <div class="reason">
+                <h3>Real-time Updates</h3>
+                <p>Stay informed with live travel alerts, weather forecasts, and local event notifications.</p>
+            </div>
+            <div class="reason">
+                <h3>Budget-friendly Options</h3>
+                <p>Find the best deals on flights, accommodations, and activities to make your dream trip affordable.</p>
+            </div>
+            <div class="reason">
+                <h3>Seamless Booking</h3>
+                <p>Book flights, hotels, and activities all in one place with our easy-to-use interface.</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+    <div class="footer-content">
+        <div>
+            <h3>Safarnama</h3>
+            <p>Explore, plan, and travel effortlessly with Expedia.</p>
+        </div>
+        <div>
+            <h3>Contact Us</h3>
+            <p>Email: support@Safarnama.com</p>
+        </div>
+    </div>
+</footer>
+
 </body>
+
 </html>
 {% endblock content %}
