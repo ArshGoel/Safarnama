@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Travel Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #f4f7f9;
+            --text-color: #333;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, h2 {
+            color: var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: calc(var(--animation-order) * 0.1s);
+        }
+
+        .chart-container, .map-container {
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background-color: #fff;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comprehensive Travel Planner</h1>
+        <form id="travelForm">
+            <div class="form-group">
+                <label for="fromDestination">From:</label>
+                <input type="text" id="fromDestination" required>
+            </div>
+            <div class="form-group">
+                <label for="toDestination">To:</label>
+                <input type="text" id="toDestination" required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (days):</label>
+                <input type="number" id="duration" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="interests">Interests (comma-separated):</label>
+                <input type="text" id="interests" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget ($):</label>
+                <input type="number" id="budget" min="0" required>
+            </div>
+            <button type="submit">Plan My Trip</button>
+        </form>
+
+        <div id="loading" class="hidden">
+            <div class="loader"></div>
+            <p>Planning your dream vacation... Please wait.</p>
+        </div>
+
+        <div id="result" class="hidden">
+            <div class="section" style="--animation-order: 1;">
+                <h2>Your Travel Plan</h2>
+                <p id="planSummary"></p>
+                <div class="chart-container">
+                    <canvas id="budgetChart" class="chart"></canvas>
+                </div>
+                <div class="map-container">
+                    <div id="map" style="height: 400px;"></div>
+                </div>
+                <div id="weatherWidget"></div>
+            </div>
+            <div class="section" style="--animation-order: 2;">
+                <h2>Recommended Hotels</h2>
+                <ul id="hotels"></ul>
+            </div>
+            <div class="section" style="--animation-order: 3;">
+                <h2>Recommended Restaurants</h2>
+                <ul id="restaurants"></ul>
+            </div>
+            <div class="section" style="--animation-order: 4;">
+                <h2>Must-Visit Attractions</h2>
+                <ul id="attractions"></ul>
+            </div>
+            <div class="section" style="--animation-order: 5;">
+                <h2>Flight Options</h2>
+                <ul id="flights"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="notifications" class="hidden"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.getElementById('travelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fromDestination = document.getElementById('fromDestination').value;
+            const toDestination = document.getElementById('toDestination').value;
+            const duration = document.getElementById('duration').value;
+            const interests = document.getElementById('interests').value;
+            const budget = document.getElementById('budget').value;
+
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('result').classList.add('hidden');
+
+            // Simulate an API call
+            setTimeout(() => {
+                document.getElementById('planSummary').textContent = From: ${fromDestination}, To: ${toDestination}, Duration: ${duration} days, Interests: ${interests}, Budget: $${budget};
+
+                const ctx = document.getElementById('budgetChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Accommodation', 'Food', 'Activities', 'Miscellaneous'],
+                        datasets: [{
+                            label: 'Budget Breakdown',
+                            data: [budget * 0.4, budget * 0.3, budget * 0.2, budget * 0.1],
+                            backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        const value = tooltipItem.raw;
+                                        return ` $${value.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                updateMap(toDestination);
+                fetchWeather(toDestination);
+                fetchHotels(toDestination);
+                fetchRestaurants(toDestination);
+                fetchAttractions(toDestination);
+                fetchFlights(fromDestination, toDestination);
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('result').classList.remove('hidden');
+                showNotification('Your travel plan is ready!');
+            }, 2000);
+        });
+
+        function updateMap(location) {
+            const map = L.map('map').setView([0, 0], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            fetch(https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)})
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+                        map.setView([lat, lon], 13);
+                        L.marker([lat, lon]).addTo(map)
+                            .bindPopup(location)
+                            .openPopup();
+                    }
+                })
+                .catch(error => console.error('Error fetching location data:', error));
+        }
+
+        function fetchWeather(location) {
+            const apiKey = '64f2ee2a8f4d40f8a7f233535232905'; // Free API key from WeatherAPI.com
+            fetch(https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(location)})
+                .then(response => response.json())
+                .then(data => {
+                    const weatherWidget = document.getElementById('weatherWidget');
+                    weatherWidget.innerHTML = `
+                        <h3>Current Weather</h3>
+                        <p>${data.location.name}: ${data.current.temp_c}°C, ${data.current.condition.text}</p>
+                        <img src="${data.current.condition.icon}" alt="${data.current.condition.text}">
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                });
+        }
+
+        function fetchHotels(location) {
+            // Using a mock API for demonstration purposes
+            fetch(https://api.jsonbin.io/b/60b9b9f7c1256a01dd6e7a1f)
+                .then(response => response.json())
+                .then(data => {
+                    const hotelsList = document.getElementById('hotels');
+                    hotelsList.innerHTML = data.hotels.map(hotel => 
+                        <li>${hotel.name} - Rating: ${hotel.rating}/5 - Price: $${hotel.price}/night</li>
+                    ).join('');
+                })
+                .catch(error => console.error('Error fetching hotel data:', error));
+        }
+
+        function fetchRestaurants(location) {
+            // Using a mock API for demonstration purposes
+            fetch(https://api.jsonbin.io/b/60b9ba0f8a4cd025b4d39e1a)
+                .then(response => response.json())
+                .then(data => {
+                    const restaurantsList = document.getElementById('restaurants');
+                    restaurantsList.innerHTML = data.restaurants.map(restaurant => 
+                        <li>${restaurant.name} - Rating: ${restaurant.rating}/5 - Cuisine: ${restaurant.cuisine}</li>
+                    ).join('');
+                })
+                .catch(error => console.error('Error fetching restaurant data:', error));
+        }
+
+        function fetchAttractions(location) {
+            // Using a mock API for demonstration purposes
+            fetch(https://api.jsonbin.io/b/60b9ba1f8a4cd025b4d39e1e)
+                .then(response =>
+ response.json())
+                .then(data => {
+                    const attractionsList = document.getElementById('attractions');
+                    attractionsList.innerHTML = data.attractions.map(attraction => 
+                        <li>${attraction.name} - Rating: ${attraction.rating}/5 - Type: ${attraction.type}</li>
+                    ).join('');
+                })
+                .catch(error => console.error('Error fetching attraction data:', error));
+        }
+
+        function fetchFlights(from, to) {
+            // Using a mock API for demonstration purposes
+            fetch(https://api.jsonbin.io/b/60b9ba2dc1256a01dd6e7a23)
+                .then(response => response.json())
+                .then(data => {
+                    const flightsList = document.getElementById('flights');
+                    flightsList.innerHTML = data.flights.map(flight => 
+                        <li>${flight.airline} - Price: $${flight.price} - Direct: ${flight.direct ? 'Yes' : 'No'}</li>
+                    ).join('');
+                })
+                .catch(error => console.error('Error fetching flight data:', error));
+        }
+
+        function showNotification(message) {
+            const notifications = document.getElementById('notifications');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-btn">&times;</button>
+            `;
+            notifications.appendChild(notification);
+            notifications.classList.remove('hidden');
+
+            notification.querySelector('.close-btn').addEventListener('click', () => {
+                notification.remove();
+                if (notifications.children.length === 0) {
+                    notifications.classList.add('hidden');
+                }
+            });
+
+            setTimeout(() => {
+                notification.remove();
+                if (notifications.children.length === 0) {
+                    notifications.classList.add('hidden');
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

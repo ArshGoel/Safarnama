@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Documents</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-header h3 {
+            margin: 0;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .document-viewer {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .mt-4 {
+            margin-top: 20px;
+        }
+
+        .mt-6 {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Documents</h2>
+        <div class="card">
+            <div class="card-header">
+                <h3>Uploaded Documents</h3>
+            </div>
+            <div class="card-content">
+                <ul id="documentsList"></ul>
+                <div class="mt-4">
+                    <label for="fileUpload" class="upload-btn">Upload New Document</label>
+                    <input id="fileUpload" type="file" accept=".pdf,.png,.jpg,.jpeg" class="hidden">
+                </div>
+            </div>
+        </div>
+
+        <div id="viewerContainer" class="hidden mt-6">
+            <h3 id="viewingDocumentName"></h3>
+            <iframe id="documentViewer" class="document-viewer" title="Document Viewer"></iframe>
+            <button id="closeViewer" class="btn btn-outline mt-4">Close Viewer</button>
+        </div>
+    </div>
+
+    <script>
+        let db;
+        let documents = [];
+        let editingId = null;
+
+        // Open IndexedDB
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('DocumentsDB', 1);
+                
+                request.onerror = () => reject('Error opening database');
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains('documents')) {
+                        db.createObjectStore('documents', { keyPath: 'id' });
+                    }
+                };
+            });
+        };
+
+        // Load documents from IndexedDB
+        const loadDocuments = async () => {
+            const transaction = db.transaction(['documents'], 'readonly');
+            const store = transaction.objectStore('documents');
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                documents = request.result;
+                renderDocuments();
+            };
+        };
+
+        // Save a document to IndexedDB
+        const saveDocument = (doc) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['documents'], 'readwrite');
+                const store = transaction.objectStore('documents');
+                const request = store.put(doc);
+
+                request.onerror = () => reject('Error saving document');
+                request.onsuccess = () => resolve();
+            });
+        };
+
+        // Delete a document from IndexedDB
+        const deleteDocument = (id) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['documents'], 'readwrite');
+                const store = transaction.objectStore('documents');
+                const request = store.delete(id);
+
+                request.onerror = () => reject('Error deleting document');
+                request.onsuccess = () => resolve();
+            });
+        };
+
+        // Render documents list
+        const renderDocuments = () => {
+            const list = document.getElementById('documentsList');
+            list.innerHTML = '';
+
+            documents.forEach(doc => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <p class="font-semibold">${doc.name}</p>
+                        <p class="text-sm text-gray-500">Uploaded: ${doc.date}</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline rename-btn" data-id="${doc.id}">Rename</button>
+                        <button class="btn btn-outline view-btn" data-id="${doc.id}">View</button>
+                        <button class="btn btn-outline download-btn" data-id="${doc.id}">Download</button>
+                        <button class="btn btn-danger delete-btn" data-id="${doc.id}">Delete</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.rename-btn').forEach(btn => {
+                btn.addEventListener('click', handleRename);
+            });
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', handleView);
+            });
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', handleDownload);
+            });
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', handleDelete);
+            });
+        };
+
+        // Handle file upload
+        const handleUpload = async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const newDoc = {
+                        id: Date.now(),
+                        name: file.name,
+                        date: new Date().toISOString().split('T')[0],
+                        fileUrl: e.target.result,
+                    };
+                    await saveDocument(newDoc);
+                    documents.push(newDoc);
+                    renderDocuments();
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Handle document deletion
+        const handleDelete = async (event) => {
+            const id = parseInt(event.target.getAttribute('data-id'));
+            await deleteDocument(id);
+            documents = documents.filter(doc => doc.id !== id);
+            renderDocuments();
+        };
+
+        // Handle document renaming
+        const handleRename = (event) => {
+            const id = parseInt(event.target.getAttribute('data-id'));
+            const doc = documents.find(doc => doc.id === id);
+            const newName = prompt('Enter new name:', doc.name);
+            if (newName) {
+                doc.name = newName.endsWith('.pdf') ? newName : `${newName}.pdf`;
+                saveDocument(doc).then(() => {
+                    renderDocuments();
+                });
+            }
+        };
+
+        // Handle document viewing
+        const handleView = (event) => {
+            const id = parseInt(event.target.getAttribute('data-id'));
+            const doc = documents.find(doc => doc.id === id);
+            const viewer = document.getElementById('documentViewer');
+            const viewerContainer = document.getElementById('viewerContainer');
+            const viewingDocumentName = document.getElementById('viewingDocumentName');
+
+            viewer.src = doc.fileUrl;
+            viewingDocumentName.textContent = `Viewing: ${doc.name}`;
+            viewerContainer.classList.remove('hidden');
+        };
+
+        // Handle document download
+        const handleDownload = (event) => {
+            const id = parseInt(event.target.getAttribute('data-id'));
+            const doc = documents.find(doc => doc.id === id);
+            const link = document.createElement('a');
+            link.href = doc.fileUrl;
+            link.download = doc.name;
+            link.click();
+        };
+
+        // Initialize the application
+        const init = async () => {
+            await openDB();
+            await loadDocuments();
+
+            // Add event listeners
+            document.getElementById('fileUpload').addEventListener('change', handleUpload);
+            document.getElementById('closeViewer').addEventListener('click', () => {
+                document.getElementById('viewerContainer').classList.add('hidden');
+            });
+        };
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
+

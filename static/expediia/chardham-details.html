@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chardham Yatra Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Loader styles */
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    
+    .loader {
+      border: 8px solid #e0e0e0;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Page fade-in and fade-out effects */
+    .page-wrapper {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .page {
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .page.fade-out {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .page.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animation for trip-day sections */
+    .trip-day {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .trip-day.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animation for images */
+    .trip-day img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .trip-day img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Button hover effects */
+    .button {
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+  <!-- Loader -->
+  <div id="loader" class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Page Content -->
+  <div class="page-wrapper">
+    <div id="page" class="page fade-out">
+      <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-900">Chardham Yatra - 10 Days Itinerary</h1>
+        </div>
+      </header>
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+          <h2 class="text-xl font-bold mb-4">Day-by-Day Plan</h2>
+
+          <!-- Day 1 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Arrival+in+Haridwar" alt="Arrival in Haridwar" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 1: Arrival in Haridwar</h3>
+              <ul class="list-disc ml-5">
+                <li>Reach Haridwar; attend Ganga Aarti at Har Ki Pauri.</li>
+                <li>Overnight stay in Haridwar.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 2 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Haridwar+to+Barkot" alt="Haridwar to Barkot" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 2: Haridwar to Barkot</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Barkot via Mussoorie and visit Kempty Falls en route.</li>
+                <li>Overnight stay in Barkot.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 3 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Barkot+to+Yamunotri" alt="Barkot to Yamunotri" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 3: Barkot to Yamunotri</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Janki Chatti, and trek 6 km to Yamunotri.</li>
+                <li>Offer prayers at Yamunotri Temple.</li>
+                <li>Return to Barkot for an overnight stay.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 4 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Barkot+to+Uttarkashi" alt="Barkot to Uttarkashi" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 4: Barkot to Uttarkashi</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Uttarkashi and visit the Kashi Vishwanath Temple.</li>
+                <li>Overnight stay in Uttarkashi.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 5 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Uttarkashi+to+Gangotri" alt="Uttarkashi to Gangotri" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 5: Uttarkashi to Gangotri</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Gangotri and offer prayers at Gangotri Temple.</li>
+                <li>Return to Uttarkashi for an overnight stay.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 6 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Uttarkashi+to+Guptkashi" alt="Uttarkashi to Guptkashi" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 6: Uttarkashi to Guptkashi</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Guptkashi via Tehri Dam and check in at the hotel.</li>
+                <li>Overnight stay in Guptkashi.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 7 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Guptkashi+to+Kedarnath" alt="Guptkashi to Kedarnath" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 7: Guptkashi to Kedarnath</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Gaurikund, and trek (or take a helicopter) to Kedarnath Temple.</li>
+                <li>Attend evening aarti and stay overnight near Kedarnath.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 8 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Kedarnath+to+Guptkashi" alt="Kedarnath to Guptkashi" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 8: Kedarnath to Guptkashi</h3>
+              <ul class="list-disc ml-5">
+                <li>Return to Gaurikund and drive back to Guptkashi.</li>
+                <li>Overnight stay in Guptkashi.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 9 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Guptkashi+to+Rishikesh" alt="Guptkashi to Rishikesh" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 9: Guptkashi to Rishikesh</h3>
+              <ul class="list-disc ml-5">
+                <li>Drive to Rishikesh and explore the local sights.</li>
+                <li>Overnight stay in Rishikesh.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 10 -->
+          <div class="trip-day mb-6">
+            <img src="https://via.placeholder.com/600x400?text=Rishikesh+to+Haridwar" alt="Rishikesh to Haridwar" class="rounded-md mb-4">
+            <div class="trip-day-content">
+              <h3 class="text-lg font-semibold">Day 10: Rishikesh to Haridwar</h3>
+              <ul class="list-disc ml-5">
+                <li>Return to Haridwar and end the Yatra with some leisure time.</li>
+                <li>Departure from Haridwar.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Back to Homepage Button -->
+          <div class="text-center mt-8">
+            <button id="backButton" class="button bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Back to Homepage</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loader = document.getElementById('loader');
+      const page = document.getElementById('page');
+
+      // Simulate page loading
+      setTimeout(() => {
+        loader.style.display = 'none';
+        page.classList.remove('fade-out');
+        page.classList.add('fade-in');
+
+        // Add visibility to trip-day sections with a delay
+        document.querySelectorAll('.trip-day').forEach((element, index) => {
+          setTimeout(() => {
+            element.classList.add('visible');
+          }, 300 * index); // Delay each section's appearance
+        });
+      }, 1000); // Simulate a 1-second loading time
+
+      // Back to Homepage button functionality
+      document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'home.html';
+      });
+    });
+  </script>
+</body>
+</html>

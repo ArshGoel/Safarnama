@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home | Safarnama{% endblock title %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #F5F4FF;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #6C5CE7;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6C5CE7;
+        }
+
+        .sign-up {
+            padding: 10px 24px;
+            background-color: #6C5CE7;
+            color: white !important;
+            border-radius: 25px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #2D3436;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: #636E72;
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 16px 24px 16px 48px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Destinations */
+        .destinations {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 80px 20px;
+            flex-wrap: wrap;
+        }
+
+        .destination-card {
+            width: 300px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .destination-content {
+            padding: 24px;
+        }
+
+        .destination-content h3 {
+            font-size: 24px;
+            color: #2D3436;
+            margin-bottom: 12px;
+        }
+
+        .destination-content p {
+            color: #636E72;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .destinations {
+                padding: 40px 20px;
+            }
+        }
+        /* Why Choose Section */
+        .why-choose {
+            background-color: #f9f9f9;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .why-choose h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        /* Why Choose Section */
+        .why-choose {
+            background-color: #f9f9f9;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .why-choose h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .reasons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .reason {
+            width: 23%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .reason:hover {
+            transform: translateY(-10px);
+        }
+
+        .reason h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .reason p {
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
+<body>
+    <section class="hero">
+        <h1>Explore the World with<br>Ease</h1>
+        <p>For a very low cost, visit every beautiful place on the planet. The ascent to the summit of the location is never lengthier than you expect.</p>
+    </section>
+
+    <div class="destinations">
+        <div class="destination-card">
+            <img src={% static "images/image.png" %} alt="Goa" class="destination-image">
+            <div class="destination-content">
+                <h3>Goa, India</h3>
+                <p>Goa is a popular tourist destination in India, known for its stunning beaches, vibrant nightlife, Portuguese heritage, and rich culture.</p>
+            </div>
+        </div>
+        <div class="destination-card">
+            <img src={% static "images/image1.png" %} alt="Dubai" class="destination-image">
+            <div class="destination-content">
+                <h3>Manali, India</h3>
+                <p>Manali is a popular hill station in the Indian state of Himachal Pradesh, situated in the northern part of India. It's renowned for its breathtaking landscapes, scenic beauty, and adventure sports.</p>
+            </div>
+        </div>
+    </div>
+    <section class="why-choose">
+        <h2>Why Choose Safarnama?</h2>
+        <div class="reasons">
+            <div class="reason">
+                <h3>Personalized Recommendations</h3>
+                <p>Our AI-powered system learns your preferences to suggest the perfect destinations and activities.</p>
+            </div>
+            <div class="reason">
+                <h3>Real-time Updates</h3>
+                <p>Stay informed with live travel alerts, weather forecasts, and local event notifications.</p>
+            </div>
+            <div class="reason">
+                <h3>Budget-friendly Options</h3>
+                <p>Find the best deals on flights, accommodations, and activities to make your dream trip affordable.</p>
+            </div>
+            <div class="reason">
+                <h3>Seamless Booking</h3>
+                <p>Book flights, hotels, and activities all in one place with our easy-to-use interface.</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+    <div class="footer-content">
+        <div>
+            <h3>Safarnama</h3>
+            <p>Explore, plan, and travel effortlessly with Expedia.</p>
+        </div>
+        <div>
+            <h3>Contact Us</h3>
+            <p>Email: support@Safarnama.com</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+
+</html>
+{% endblock content %}
