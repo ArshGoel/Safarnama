@@ -107,8 +107,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Added Manually
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build',"static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', "static")
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 MEDIA_URL = '/media/'
 if os.getenv('VERCEL') and not os.access(BASE_DIR, os.W_OK):
