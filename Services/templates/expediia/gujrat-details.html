@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gujarat 7-Day Itinerary | Safarnama{% endblock title %}
+{% block dashboardactive %}active{% endblock dashboardactive %}
+
+{% block extra_css %}
+<style>
+    .dest-details-wrapper {
+        min-height: calc(100vh - 70px);
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    }
+
+    .dest-hero-header {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15);
+    }
+
+    .day-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.09);
+    }
+
+    .day-card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .day-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+    }
+
+    .highlight-list li {
+        margin-bottom: 0.5rem;
+        color: #475569;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="dest-details-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <!-- Header -->
+        <div class="dest-hero-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'itinery' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+                        <i class="bi bi-magic me-1"></i> Customize with AI
+                    </a>
+                </div>
+            </div>
+            <h1 class="fw-bold text-white mb-2">Gujarat Heritage & Coastlines</h1>
+            <p class="text-light opacity-75 mb-0">7 Days Complete Circuit • Ahmedabad • Dwarka • Somnath • Sasan Gir • Rajkot</p>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=900&auto=format&fit=crop&q=80" alt="Arrival in Ahmedabad" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 1</span>
+                <h3 class="fw-bold text-dark mb-3">Arrival in Ahmedabad & Cultural Landmarks</h3>
+                <ul class="highlight-list">
+                    <li>Arrive at Sardar Vallabhbhai Patel International Airport / Railway Station and check into your hotel.</li>
+                    <li>Visit the serene Sabarmati Ashram on the riverfront, where Mahatma Gandhi led the independence struggle.</li>
+                    <li>Explore Sidi Saiyyed Mosque, famed globally for the intricately carved "Tree of Life" stone jali.</li>
+                    <li>Evening stroll and street food delights along the illuminated Kankaria Lake.</li>
+                    <li>Overnight stay in Ahmedabad.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=900&auto=format&fit=crop&q=80" alt="Ahmedabad to Dwarka" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 2</span>
+                <h3 class="fw-bold text-dark mb-3">Ahmedabad to the Sacred Kingdom of Dwarka</h3>
+                <ul class="highlight-list">
+                    <li>Scenic morning coastal highway drive to Dwarka across Saurashtra peninsula.</li>
+                    <li>Check in to your hotel and prepare for Darshan at the magnificent 5-story Dwarkadhish Jagat Mandir.</li>
+                    <li>Attend the divine evening Aarti and listen to temple bells ringing against the Arabian Sea.</li>
+                    <li>Sunset walk along Gomti Ghat where the holy river meets the sea.</li>
+                    <li>Overnight stay in Dwarka.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=900&auto=format&fit=crop&q=80" alt="Bet Dwarka and Nageshwar" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 3</span>
+                <h3 class="fw-bold text-dark mb-3">Bet Dwarka Island & Nageshwar Jyotirlinga</h3>
+                <ul class="highlight-list">
+                    <li>Morning boat ride from Okha port to Bet Dwarka island across turquoise waters.</li>
+                    <li>Seek blessings at Nageshwar Jyotirlinga, one of the 12 sacred Jyotirlingas of Lord Shiva.</li>
+                    <li>Visit Gopi Talav and the holy Rukmini Devi Temple.</li>
+                    <li>Relax at Shivrajpur Blue Flag certified beach with crystal clear waters.</li>
+                    <li>Overnight stay in Dwarka.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1621682372775-533449e550ed?w=900&auto=format&fit=crop&q=80" alt="Somnath Temple" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 4</span>
+                <h3 class="fw-bold text-dark mb-3">Dwarka to Somnath via Porbandar</h3>
+                <ul class="highlight-list">
+                    <li>Drive towards Somnath along the coastal belt of Kathiawar.</li>
+                    <li>Stop at Porbandar to visit Kirti Mandir (Mahatma Gandhi’s birthplace) and Sudama Temple.</li>
+                    <li>Reach Somnath and witness the awe-inspiring seaside Somnath Jyotirlinga Temple.</li>
+                    <li>Experience the mesmerizing evening Light and Sound Show narrating the temple’s historic resurrection.</li>
+                    <li>Overnight stay in Somnath.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?w=900&auto=format&fit=crop&q=80" alt="Gir National Park" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 5</span>
+                <h3 class="fw-bold text-dark mb-3">Somnath to Gir National Park (Asiatic Lions)</h3>
+                <ul class="highlight-list">
+                    <li>Drive into the deciduous dry forests of Sasan Gir, the only natural habitat of the Asiatic Lion.</li>
+                    <li>Embark on an exhilarating open-top Jeep Safari through the Gir Wildlife Sanctuary.</li>
+                    <li>Spot wild lions, leopards, sambar deer, nilgai, and exotic migratory birds.</li>
+                    <li>Evening traditional Kathiyawadi dinner with organic millet rotla and garlic chutney.</li>
+                    <li>Overnight stay at a wildlife resort in Sasan Gir.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&auto=format&fit=crop&q=80" alt="Rajkot Heritage" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 6</span>
+                <h3 class="fw-bold text-dark mb-3">Gir to Rajkot Royal Heritage</h3>
+                <ul class="highlight-list">
+                    <li>Drive to the vibrant cultural city of Rajkot.</li>
+                    <li>Visit Kaba Gandhi No Delo, the ancestral house of Mahatma Gandhi showcasing rare photographs.</li>
+                    <li>Explore Watson Museum and the majestic Jubilee Garden.</li>
+                    <li>Shop for famous traditional Bandhani sarees, silver crafts, and Patola silks in Rajkot markets.</li>
+                    <li>Overnight stay in Rajkot.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1600100397608-f010f4439c09?w=900&auto=format&fit=crop&q=80" alt="Adalaj Stepwell Ahmedabad" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 7</span>
+                <h3 class="fw-bold text-dark mb-3">Rajkot to Ahmedabad & Farewell</h3>
+                <ul class="highlight-list">
+                    <li>Drive back to Ahmedabad and stop at the 15th-century subterranean marvel: Adalaj Stepwell.</li>
+                    <li>Marvel at the 5-story deep Solanki architecture and intricate stone carvings.</li>
+                    <li>Pick up Gujarati sweets (Mohanthal, Khakhra) for loved ones.</li>
+                    <li>Transfer to Ahmedabad airport or railway station for departure with cherished memories.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

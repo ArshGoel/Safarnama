@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chardham Yatra 10-Day Sacred Journey | Safarnama{% endblock title %}
+{% block dashboardactive %}active{% endblock dashboardactive %}
+
+{% block extra_css %}
+<style>
+    .dest-details-wrapper {
+        min-height: calc(100vh - 70px);
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    }
+
+    .dest-hero-header {
+        background: linear-gradient(135deg, #ea580c, #7c2d12);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.25);
+    }
+
+    .day-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.09);
+    }
+
+    .day-card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .day-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(234, 88, 12, 0.1);
+        color: #ea580c;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+    }
+
+    .highlight-list li {
+        margin-bottom: 0.5rem;
+        color: #475569;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="dest-details-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <!-- Header -->
+        <div class="dest-hero-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'itinery' %}" class="btn btn-light btn-sm rounded-pill px-3 text-warning fw-semibold">
+                        <i class="bi bi-magic me-1"></i> Customize with AI
+                    </a>
+                </div>
+            </div>
+            <h1 class="fw-bold text-white mb-2">Chardham Yatra Pilgrimage</h1>
+            <p class="text-light opacity-75 mb-0">10 Days Himalayan Odyssey • Yamunotri • Gangotri • Kedarnath • Badrinath • Rishikesh</p>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=900&auto=format&fit=crop&q=80" alt="Haridwar Ganga Aarti" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 1</span>
+                <h3 class="fw-bold text-dark mb-3">Arrival in Holy Haridwar & Ganga Aarti</h3>
+                <ul class="highlight-list">
+                    <li>Arrive at Haridwar railway station or Dehradun Jolly Grant Airport.</li>
+                    <li>Check into your hotel and take a holy dip in the sacred waters of the Ganges at Brahmakund.</li>
+                    <li>Attend the divine evening Ganga Aarti at Har Ki Pauri with thousands of floating earthen lamps (diyas).</li>
+                    <li>Briefing by yatra tour guides on high-altitude preparation and gear.</li>
+                    <li>Overnight stay in Haridwar.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&auto=format&fit=crop&q=80" alt="Haridwar to Barkot" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 2</span>
+                <h3 class="fw-bold text-dark mb-3">Haridwar to Barkot (Foot of Yamunotri)</h3>
+                <ul class="highlight-list">
+                    <li>Depart early morning on the mountain ascent via Mussoorie and Kempty Falls.</li>
+                    <li>Drive along the winding Yamuna valley towards Barkot.</li>
+                    <li>Enjoy pristine views of the Bandarpoonch peak and lush Garhwal Himalayan foothills.</li>
+                    <li>Rest and acclimatize at Barkot hill station.</li>
+                    <li>Overnight stay in Barkot.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=900&auto=format&fit=crop&q=80" alt="Yamunotri Shrine" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 3</span>
+                <h3 class="fw-bold text-dark mb-3">Yamunotri Dham Darshan & Trek</h3>
+                <ul class="highlight-list">
+                    <li>Drive to Janki Chatti and commence the scenic 6 km trek (by foot, pony, or doli) to Yamunotri Dham.</li>
+                    <li>Take a holy dip in the Surya Kund thermal hot spring and cook rice prasad tied in muslin cloth.</li>
+                    <li>Pray at the black marble idol of Goddess Yamuna and Divya Shila rock.</li>
+                    <li>Trek back down to Janki Chatti and return to Barkot.</li>
+                    <li>Overnight stay in Barkot.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&auto=format&fit=crop&q=80" alt="Barkot to Uttarkashi" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 4</span>
+                <h3 class="fw-bold text-dark mb-3">Barkot to Uttarkashi (Kashi of the North)</h3>
+                <ul class="highlight-list">
+                    <li>Scenic drive across the Radi Top pass towards the Bhagirathi River basin.</li>
+                    <li>Reach Uttarkashi, known as the abode of saints and yogis.</li>
+                    <li>Visit the ancient Vishwanath Temple featuring a massive historic copper trident (Trishul).</li>
+                    <li>Relax and meditate along the banks of the Bhagirathi river.</li>
+                    <li>Overnight stay in Uttarkashi.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=900&auto=format&fit=crop&q=80" alt="Gangotri Temple" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 5</span>
+                <h3 class="fw-bold text-dark mb-3">Gangotri Dham Darshan & Bhagirathi Valley</h3>
+                <ul class="highlight-list">
+                    <li>Drive along the thrilling high-altitude gorge passing through Harsil Apple Valley.</li>
+                    <li>Take a holy bath in the icy waters of the Bhagirathi river at Gangotri.</li>
+                    <li>Attend pooja and Darshan at the 18th-century white granite Gangotri Temple dedicated to Goddess Ganga.</li>
+                    <li>Observe the submerged Shivling underwater near Bhagirath Shila.</li>
+                    <li>Return to Uttarkashi for overnight stay.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=900&auto=format&fit=crop&q=80" alt="Guptkashi Valley" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 6</span>
+                <h3 class="fw-bold text-dark mb-3">Uttarkashi to Guptkashi</h3>
+                <ul class="highlight-list">
+                    <li>Traverse the scenic Garhwal terrain connecting Bhagirathi valley to the Mandakini valley.</li>
+                    <li>Pass by the gigantic Tehri Dam reservoir with expansive emerald-green mountain waters.</li>
+                    <li>Arrive at Guptkashi, the historic base for Kedarnath pilgrims.</li>
+                    <li>Visit the ancient Ardhanarishwar temple and Kashi Vishwanath shrine.</li>
+                    <li>Overnight stay in Guptkashi.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=900&auto=format&fit=crop&q=80" alt="Kedarnath Temple" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 7</span>
+                <h3 class="fw-bold text-dark mb-3">Guptkashi to Kedarnath Jyotirlinga Darshan</h3>
+                <ul class="highlight-list">
+                    <li>Travel to Gaurikund and begin the unforgettable 16 km mountain pilgrimage trek to Kedarnath (or via helicopter).</li>
+                    <li>Trek past gushing waterfalls, snowfields, and panoramic views of the Kedar Dome.</li>
+                    <li>Reach Kedarnath Dham standing tall before gigantic snow-capped Himalayan peaks.</li>
+                    <li>Attend the mystical evening Aarti inside the ancient stone temple of Lord Shiva.</li>
+                    <li>Overnight stay in Kedarnath camp / guesthouse.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 8 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=900&auto=format&fit=crop&q=80" alt="Badrinath Dham" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 8</span>
+                <h3 class="fw-bold text-dark mb-3">Kedarnath to Badrinath Dham</h3>
+                <ul class="highlight-list">
+                    <li>Morning darshan at Kedarnath and descent back to Gaurikund.</li>
+                    <li>Drive via Joshimath and Vishnuprayag to Badrinath, nestled between Nar and Narayana mountain ranges.</li>
+                    <li>Bathe in the natural sulfur hot spring Tapt Kund.</li>
+                    <li>Seek blessings of Lord Badri Narayan at the colorfully painted Badrinath Temple.</li>
+                    <li>Visit Mana Village, the last Indian village before the Tibet border, and Bheem Pul over Saraswati River.</li>
+                    <li>Overnight stay in Badrinath.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 9 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1600100397608-f010f4439c09?w=900&auto=format&fit=crop&q=80" alt="Rishikesh Yoga Capital" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 9</span>
+                <h3 class="fw-bold text-dark mb-3">Badrinath to Rishikesh (Yoga Capital of the World)</h3>
+                <ul class="highlight-list">
+                    <li>Drive down the Alaknanda valley passing Panch Prayag confluences (Karnaprayag, Rudraprayag, Devprayag).</li>
+                    <li>Arrive in Rishikesh, the world capital of Yoga and meditation.</li>
+                    <li>Walk across Ram Jhula and Lakshman Jhula suspension bridges.</li>
+                    <li>Attend the soul-stirring Triveni Ghat Ganga Aarti.</li>
+                    <li>Overnight stay in Rishikesh.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 10 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&auto=format&fit=crop&q=80" alt="Return Journey" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 10</span>
+                <h3 class="fw-bold text-dark mb-3">Departure with Divine Blessings</h3>
+                <ul class="highlight-list">
+                    <li>Morning meditation session or river rafting excursion in Rishikesh.</li>
+                    <li>Transfer to Dehradun Airport or Haridwar Railway station for your onward return journey.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

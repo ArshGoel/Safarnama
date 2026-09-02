@@ -1,205 +1,251 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Trip</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+{% block title %}Plan Your Trip | Safarnama AI Itinerary{% endblock title %}
+{% block itineraryactive %}active{% endblock itineraryactive %}
 
-        h2 {
-            font-weight: bold;
-            font-size: 1.875rem;
-            margin-bottom: 0.75rem;
-        }
+{% block extra_css %}
+<style>
+    .itinerary-page-wrapper {
+        min-height: calc(100vh - 70px);
+        padding: 2.5rem 1rem;
+        background-color: #f8fafc;
+    }
 
-        p {
-            color: #6b7280;
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-        }
+    .planner-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        padding: 2.5rem;
+    }
 
-        .form-group {
-            margin-bottom: 2rem;
-        }
+    .section-header-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(6, 182, 212, 0.1));
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #4f46e5;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
 
-        .form-group h2 {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-        }
+    .choice-card-option {
+        position: relative;
+        cursor: pointer;
+    }
 
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-        }
+    .choice-card-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-        }
+    .choice-card-label {
+        display: block;
+        padding: 1.25rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        background: #f8fafc;
+        text-align: center;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        height: 100%;
+    }
 
-        .grid-item {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: box-shadow 0.3s ease;
-        }
+    .choice-card-label:hover {
+        border-color: #cbd5e1;
+        background: #ffffff;
+        transform: translateY(-2px);
+    }
 
-        .grid-item:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    .choice-card-option input[type="radio"]:checked + .choice-card-label {
+        border-color: #4f46e5;
+        background: rgba(79, 70, 229, 0.04);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
 
-        .grid-item.selected {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 2px solid black;
-        }
+    .choice-card-label i {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        color: #64748b;
+        transition: color 0.2s ease;
+    }
 
-        .grid-item h2 {
-            font-size: 2.25rem;
-            margin-bottom: 0.5rem;
-        }
+    .choice-card-option input[type="radio"]:checked + .choice-card-label i {
+        color: #4f46e5;
+    }
 
-        .grid-item h3 {
-            font-weight: bold;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
+    .choice-title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
 
-        .grid-item p {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
+    .choice-desc {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin: 0;
+    }
 
-        .button {
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+    .btn-generate-itinerary {
+        padding: 0.95rem 2rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        font-size: 1.05rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        .button:hover {
-            background-color: #2563eb;
-        }
+    .btn-generate-itinerary:hover {
+        opacity: 0.95;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(79, 70, 229, 0.45);
+        color: #ffffff;
+    }
+</style>
+{% endblock extra_css %}
 
-        .text-right {
-            text-align: right;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Tell us your travel preferences🏖🏝</h2>
-        <p>Just provide some basic information and our trip planner will generate a customized itinerary based on your preferences.</p>
-
-        <form id="tripForm" method="POST" action="{% url 'itinery' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <h2>What is destination of choice?</h2>
-                <input type="text" id="location" name="location" placeholder="Enter your destination" required>
+{% block content %}
+<div class="itinerary-page-wrapper">
+    <div class="container" style="max-width: 860px;">
+        <div class="planner-card">
+            <div class="text-center mb-4">
+                <div class="section-header-icon">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <h1 class="fw-bold text-dark mb-2">Tell Us Your Travel Preferences 🏕️🌴</h1>
+                <p class="text-muted">Simply provide a few details and our AI will build a personalized day-by-day itinerary.</p>
             </div>
-        
-            <div class="form-group">
-                <h2>How many days are you planning your trip?</h2>
-                <input type="number" id="noOfDays" name="noOfDays" placeholder="Enter number of days" required>
-            </div>
-        
-            <div class="form-group">
-                <h2>What is your budget?</h2>
-                <div id="budgetOptions" class="grid"></div>
-            </div>
-        
-            <div class="form-group">
-                <h2>Who do you plan on travelling with on your next adventure?</h2>
-                <div id="travelOptions" class="grid"></div>
-            </div>
-        
-            <div class="text-right">
-                <button type="submit" id="generateTrip" class="button">Generate Trip</button>
-            </div>
-        </form>
 
-        <!-- Back button outside the form -->
-        <div class="text-left">
-            <a href="/dashboard">
-                <button class="button">Back</button>
-            </a>
+            <form action="{% url 'itinery' %}" method="POST">
+                {% csrf_token %}
+
+                <!-- Destination Location -->
+                <div class="mb-4">
+                    <label for="locationInput" class="form-label fw-semibold text-dark">
+                        <i class="bi bi-geo-alt text-primary me-1"></i> What is your destination of choice?
+                    </label>
+                    <input type="text" id="locationInput" name="location" class="form-control form-control-lg fs-6"
+                           placeholder="e.g. Goa, Paris, Manali, Tokyo, Dubai" required>
+                </div>
+
+                <!-- Number of Days -->
+                <div class="mb-4">
+                    <label for="noOfDaysInput" class="form-label fw-semibold text-dark">
+                        <i class="bi bi-calendar3 text-primary me-1"></i> How many days are you planning for?
+                    </label>
+                    <input type="number" id="noOfDaysInput" name="noOfDays" class="form-control form-control-lg fs-6"
+                           placeholder="e.g. 3, 5, 7" min="1" max="30" required>
+                </div>
+
+                <!-- Budget Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark mb-2">
+                        <i class="bi bi-cash-stack text-primary me-1"></i> What is your budget level?
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="budget" value="Cheap" required checked>
+                                <div class="choice-card-label">
+                                    <i class="bi bi-piggy-bank"></i>
+                                    <div class="choice-title">Cheap</div>
+                                    <p class="choice-desc">Stay conscious of costs</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="budget" value="Moderate">
+                                <div class="choice-card-label">
+                                    <i class="bi bi-wallet2"></i>
+                                    <div class="choice-title">Moderate</div>
+                                    <p class="choice-desc">Balanced comfort and value</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="budget" value="Luxury">
+                                <div class="choice-card-label">
+                                    <i class="bi bi-gem"></i>
+                                    <div class="choice-title">Luxury</div>
+                                    <p class="choice-desc">Premium high-end stays</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Traveler Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark mb-2">
+                        <i class="bi bi-people text-primary me-1"></i> Who are you traveling with?
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="traveler" value="Just Me" required checked>
+                                <div class="choice-card-label">
+                                    <i class="bi bi-person"></i>
+                                    <div class="choice-title">Solo</div>
+                                    <p class="choice-desc">Independent voyager</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="traveler" value="A Couple">
+                                <div class="choice-card-label">
+                                    <i class="bi bi-heart"></i>
+                                    <div class="choice-title">Couple</div>
+                                    <p class="choice-desc">Two travelers together</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="traveler" value="Family">
+                                <div class="choice-card-label">
+                                    <i class="bi bi-house-heart"></i>
+                                    <div class="choice-title">Family</div>
+                                    <p class="choice-desc">All generations</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="choice-card-option w-100">
+                                <input type="radio" name="traveler" value="Friends">
+                                <div class="choice-card-label">
+                                    <i class="bi bi-cup-hot"></i>
+                                    <div class="choice-title">Friends</div>
+                                    <p class="choice-desc">Adventure seekers</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 pt-2">
+                    <button type="submit" class="btn-generate-itinerary">
+                        <i class="bi bi-magic"></i> Generate AI Itinerary
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-
-    <script>
-        const formData = {};
-    
-        const SelectBudgetOptions = [
-<<<<<<< HEAD
-            { icon: "💰", title: "Budget", desc: "Less than $1000" },
-            { icon: "💵", title: "Mid-Range", desc: "$1000 - $5000" },
-            { icon: "💎", title: "Luxury", desc: "More than $5000" }
-=======
-            { icon: "💰", title: "Budget", desc: "Less than Rs 5000" },
-            { icon: "💵", title: "Mid-Range", desc: "Rs 5000 - Rs 15000" },
-            { icon: "💎", title: "Luxury", desc: "More than Rs 20000" }
->>>>>>> 0b634fc743c4f25f0e09fcf2746ca07a5f81d8ec
-        ];
-    
-        const SelectTravelsList = [
-            { icon: "👫", title: "Couple", people: "Couple", desc: "Traveling with your partner" },
-            { icon: "👨‍👩‍👧‍👦", title: "Family", people: "Family", desc: "Traveling with your family" },
-            { icon: "👥", title: "Group", people: "Group", desc: "Traveling with friends" }
-        ];
-    
-        function handleInputChange(name, value) {
-            formData[name] = value;
-            console.log(formData);
-        }
-    
-        function renderOptions(options, containerId, type) {
-            const container = document.getElementById(containerId);
-            options.forEach((item) => {
-                const div = document.createElement('div');
-                div.className = 'grid-item';
-                div.innerHTML = ` 
-                    <h2>${item.icon}</h2>
-                    <h3>${item.title}</h3>
-                    <p>${item.desc}</p>
-                `;
-                div.addEventListener('click', () => {
-                    handleInputChange(type, type === 'budget' ? item.title : item.people);
-                    document.querySelectorAll(`#${containerId} .grid-item`).forEach(el => el.classList.remove('selected'));
-                    div.classList.add('selected');
-                    document.getElementById(type).value = type === 'budget' ? item.title : item.people;
-                });
-                container.appendChild(div);
-            });
-        }
-    
-        document.getElementById('location').addEventListener('change', (e) => handleInputChange('location', e.target.value));
-        document.getElementById('noOfDays').addEventListener('change', (e) => handleInputChange('noOfDays', e.target.value));
-    
-        renderOptions(SelectBudgetOptions, 'budgetOptions', 'budget');
-        renderOptions(SelectTravelsList, 'travelOptions', 'traveler');
-    </script>
-</body>
-</html>
+</div>
+{% endblock content %}

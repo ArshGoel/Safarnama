@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Goa 4-Day Coastal Escape | Safarnama{% endblock title %}
+{% block dashboardactive %}active{% endblock dashboardactive %}
+
+{% block extra_css %}
+<style>
+    .dest-details-wrapper {
+        min-height: calc(100vh - 70px);
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    }
+
+    .dest-hero-header {
+        background: linear-gradient(135deg, #0284c7, #0f172a);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);
+    }
+
+    .day-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.09);
+    }
+
+    .day-card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .day-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(2, 132, 199, 0.1);
+        color: #0284c7;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+    }
+
+    .highlight-list li {
+        margin-bottom: 0.5rem;
+        color: #475569;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="dest-details-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <!-- Header -->
+        <div class="dest-hero-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'itinery' %}" class="btn btn-light btn-sm rounded-pill px-3 text-primary fw-semibold">
+                        <i class="bi bi-magic me-1"></i> Customize with AI
+                    </a>
+                </div>
+            </div>
+            <h1 class="fw-bold text-white mb-2">Goa Tropical Paradise</h1>
+            <p class="text-light opacity-75 mb-0">4 Days Sunny Getaway • North Goa Beaches • Fort Aguada • Panjim Latin Quarter • Heritage Cathedrals</p>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=900&auto=format&fit=crop&q=80" alt="Arrival in Goa" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 1</span>
+                <h3 class="fw-bold text-dark mb-3">Arrival in Goa & North Beaches Relaxation</h3>
+                <ul class="highlight-list">
+                    <li>Arrive at Goa Airport (Dabolim/MOPA) or Madgaon railway station and check into your beach resort.</li>
+                    <li>Head straight to Calangute and Baga beach to soak in the ocean breeze and golden sands.</li>
+                    <li>Sip on fresh tender coconut water and explore beachside cafes with live acoustic music.</li>
+                    <li>Witness a breathtaking sunset into the Arabian Sea followed by fresh Goan seafood dinner.</li>
+                    <li>Overnight stay in North Goa.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=900&auto=format&fit=crop&q=80" alt="North Goa Sightseeing" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 2</span>
+                <h3 class="fw-bold text-dark mb-3">Portuguese Fortresses, Watersports & Vagator</h3>
+                <ul class="highlight-list">
+                    <li>Morning exploration of the 17th-century Fort Aguada and its historic hilltop lighthouse.</li>
+                    <li>Water sports thrills at Anjuna or Baga beach: jet skiing, parasailing, and banana boat rides.</li>
+                    <li>Climb up to Chapora Fort (the famous Dil Chahta Hai viewpoint) overlooking the Ozran coast.</li>
+                    <li>Evening visit to the vibrant Anjuna Flea Market for handcrafted souvenirs, jewelry, and boho apparel.</li>
+                    <li>Overnight stay in North Goa.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1590393282200-a54160408544?w=900&auto=format&fit=crop&q=80" alt="Old Goa and Panjim" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 3</span>
+                <h3 class="fw-bold text-dark mb-3">Historic Old Goa Heritage & Fontainhas Latin Quarter</h3>
+                <ul class="highlight-list">
+                    <li>Visit the UNESCO World Heritage Basilica of Bom Jesus housing the sacred relics of St. Francis Xavier.</li>
+                    <li>Admire the monumental Se Cathedral and Church of St. Francis of Assisi.</li>
+                    <li>Stroll through Fontainhas, the colorful Portuguese Latin quarter in Panaji with cobblestone streets and pastel heritage villas.</li>
+                    <li>Sunset Mandovi River Cruise featuring traditional Goan folk dances (Dekhni & Fugdi).</li>
+                    <li>Overnight stay in Panaji / Central Goa.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=900&auto=format&fit=crop&q=80" alt="Departure Goa" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 4</span>
+                <h3 class="fw-bold text-dark mb-3">South Goa Tranquility & Departure</h3>
+                <ul class="highlight-list">
+                    <li>Morning visit to the tranquil crescent bay of Palolem Beach or butterfly beach.</li>
+                    <li>Indulge in an authentic Goan fish thali or bebinca dessert at a local tavern.</li>
+                    <li>Shop for roasted cashew nuts, feni, and Goan spices at the Mapusa or Panaji market.</li>
+                    <li>Transfer to the airport or railway station for your onward journey.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

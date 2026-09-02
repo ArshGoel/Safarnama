@@ -1,303 +1,361 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Home | Safarnama{% endblock title %}
+
+{% block title %}Safarnama | AI-Powered Travel Platform{% endblock title %}
+{% block homeactive %}active{% endblock homeactive %}
+
+{% block extra_css %}
+<style>
+    .home-wrapper {
+        background-color: #f8fafc;
+        width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+        text-align: center;
+        padding: 80px 20px 50px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(79, 70, 229, 0.08);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        color: #4f46e5;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 999px;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 3.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 1.25rem;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+        color: #64748b;
+        font-size: 1.15rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .hero-cta-group {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        color: #ffffff;
+        font-weight: 600;
+        padding: 12px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+        transition: all 0.25s ease;
+    }
+
+    .btn-hero-primary:hover {
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
+    }
+
+    .btn-hero-secondary {
+        background: #ffffff;
+        color: #1e293b;
+        border: 1.5px solid #e2e8f0;
+        font-weight: 600;
+        padding: 12px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+
+    .btn-hero-secondary:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        transform: translateY(-2px);
+    }
+
+    /* Destinations */
+    .destinations-section {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+    }
+
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+    }
+
+    .destination-card {
+        background-color: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .destination-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
+    }
+
+    .destination-image {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+    }
+
+    .destination-content {
+        padding: 24px;
+    }
+
+    .destination-content h3 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .destination-content p {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+
+    /* Why Choose Section */
+    .why-choose {
+        background-color: #ffffff;
+        padding: 80px 20px;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .why-choose-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .why-choose h2 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .reasons-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+    }
+
+    .reason-card {
+        background-color: #f8fafc;
+        padding: 30px 24px;
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: left;
+    }
+
+    .reason-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .reason-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(6, 182, 212, 0.1));
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #4f46e5;
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+
+    .reason-card h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #0f172a;
+    }
+
+    .reason-card p {
+        font-size: 0.9rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+
+    /* Footer */
+    .safarnama-footer {
+        background-color: #0f172a;
+        color: #cbd5e1;
+        padding: 50px 20px 30px;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .footer-content h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+    }
+
+    .footer-content p {
+        font-size: 0.9rem;
+        color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.25rem;
+        }
+    }
+</style>
+{% endblock extra_css %}
 
 {% block content %}
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background-color: #F5F4FF;
-        }
-
-        /* Navigation */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: white;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: #6C5CE7;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .logo img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #666;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #6C5CE7;
-        }
-
-        .sign-up {
-            padding: 10px 24px;
-            background-color: #6C5CE7;
-            color: white !important;
-            border-radius: 25px;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            color: #2D3436;
-            margin-bottom: 24px;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            color: #636E72;
-            font-size: 18px;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        /* Search Bar */
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 16px 24px 16px 48px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-        }
-
-        /* Destinations */
-        .destinations {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            padding: 80px 20px;
-            flex-wrap: wrap;
-        }
-
-        .destination-card {
-            width: 300px;
-            border-radius: 24px;
-            overflow: hidden;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .destination-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 24px;
-        }
-
-        .destination-content {
-            padding: 24px;
-        }
-
-        .destination-content h3 {
-            font-size: 24px;
-            color: #2D3436;
-            margin-bottom: 12px;
-        }
-
-        .destination-content p {
-            color: #636E72;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .destinations {
-                padding: 40px 20px;
-            }
-        }
-        /* Why Choose Section */
-        .why-choose {
-            background-color: #f9f9f9;
-            padding: 50px 20px;
-            text-align: center;
-        }
-
-        .why-choose h2 {
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-        }
-        /* Footer */
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        footer .footer-content {
-            display: flex;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        footer h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        footer p {
-            font-size: 0.9rem;
-            color: #bbb;
-        }
-        /* Why Choose Section */
-        .why-choose {
-            background-color: #f9f9f9;
-            padding: 50px 20px;
-            text-align: center;
-        }
-
-        .why-choose h2 {
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-        }
-
-        .reasons {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .reason {
-            width: 23%;
-            background-color: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .reason:hover {
-            transform: translateY(-10px);
-        }
-
-        .reason h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .reason p {
-            font-size: 1rem;
-            color: #666;
-        }
-    </style>
-<body>
+<div class="home-wrapper">
+    <!-- Hero Section -->
     <section class="hero">
-        <h1>Explore the World with<br>Ease</h1>
-        <p>For a very low cost, visit every beautiful place on the planet. The ascent to the summit of the location is never lengthier than you expect.</p>
+        <div class="hero-badge">
+            <i class="bi bi-stars"></i> Next-Gen AI Travel Engine
+        </div>
+        <h1>Explore the World with <span>Intelligent Ease</span></h1>
+        <p>Plan customized itineraries, check live weather, chat with our AI concierge, and keep your travel documents secure — all in one unified platform.</p>
+        <div class="hero-cta-group">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn-hero-primary">
+                    <i class="bi bi-speedometer2 me-1"></i> Open Dashboard
+                </a>
+                <a href="{% url 'itinery' %}" class="btn-hero-secondary">
+                    <i class="bi bi-magic me-1"></i> Plan a Trip
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn-hero-primary">
+                    <i class="bi bi-person-plus me-1"></i> Get Started Free
+                </a>
+                <a href="{% url 'login' %}" class="btn-hero-secondary">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                </a>
+            {% endif %}
+        </div>
     </section>
 
-    <div class="destinations">
-        <div class="destination-card">
-            <img src={% static "images/image.png" %} alt="Goa" class="destination-image">
-            <div class="destination-content">
-                <h3>Goa, India</h3>
-                <p>Goa is a popular tourist destination in India, known for its stunning beaches, vibrant nightlife, Portuguese heritage, and rich culture.</p>
+    <!-- Destinations Section -->
+    <section class="destinations-section">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark fs-2 mb-2">Featured Destinations</h2>
+            <p class="text-muted">Hand-picked iconic travel spots ready for your next adventure</p>
+        </div>
+        <div class="destinations-grid">
+            <div class="destination-card">
+                <img src="{% static 'images/image.png' %}" alt="Goa" class="destination-image">
+                <div class="destination-content">
+                    <h3>Goa, India</h3>
+                    <p>Known for its sun-kissed beaches, vibrant nightlife, Portuguese heritage, and rich coastal culture.</p>
+                </div>
+            </div>
+            <div class="destination-card">
+                <img src="{% static 'images/image1.png' %}" alt="Manali" class="destination-image">
+                <div class="destination-content">
+                    <h3>Manali, India</h3>
+                    <p>A breathtaking Himalayan valley known for snow-capped peaks, scenic mountain roads, and adventure sports.</p>
+                </div>
+            </div>
+            <div class="destination-card">
+                <img src="{% static 'images/Chardham-Yatra.jpg' %}" alt="Chardham" class="destination-image">
+                <div class="destination-content">
+                    <h3>Chardham, Uttarakhand</h3>
+                    <p>An revered sacred pilgrimage journey across high Himalayan peaks, tranquil rivers, and ancient temples.</p>
+                </div>
             </div>
         </div>
-        <div class="destination-card">
-            <img src={% static "images/image1.png" %} alt="Dubai" class="destination-image">
-            <div class="destination-content">
-                <h3>Manali, India</h3>
-                <p>Manali is a popular hill station in the Indian state of Himachal Pradesh, situated in the northern part of India. It's renowned for its breathtaking landscapes, scenic beauty, and adventure sports.</p>
-            </div>
-        </div>
-    </div>
+    </section>
+
+    <!-- Why Choose Section -->
     <section class="why-choose">
-        <h2>Why Choose Safarnama?</h2>
-        <div class="reasons">
-            <div class="reason">
-                <h3>Personalized Recommendations</h3>
-                <p>Our AI-powered system learns your preferences to suggest the perfect destinations and activities.</p>
-            </div>
-            <div class="reason">
-                <h3>Real-time Updates</h3>
-                <p>Stay informed with live travel alerts, weather forecasts, and local event notifications.</p>
-            </div>
-            <div class="reason">
-                <h3>Budget-friendly Options</h3>
-                <p>Find the best deals on flights, accommodations, and activities to make your dream trip affordable.</p>
-            </div>
-            <div class="reason">
-                <h3>Seamless Booking</h3>
-                <p>Book flights, hotels, and activities all in one place with our easy-to-use interface.</p>
+        <div class="why-choose-inner">
+            <h2>Why Choose Safarnama?</h2>
+            <div class="reasons-grid">
+                <div class="reason-card">
+                    <div class="reason-icon"><i class="bi bi-robot"></i></div>
+                    <h3>AI Itinerary Creator</h3>
+                    <p>Instant tailored travel schedules adapted to your exact days, budget, and travel companions.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon"><i class="bi bi-cloud-sun-fill"></i></div>
+                    <h3>Live Global Weather</h3>
+                    <p>Real-time forecasts and 5-day outlooks to ensure you never get caught unprepared.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                    <h3>Document Vault</h3>
+                    <p>Offline-capable browser storage for boarding passes, tickets, IDs, and reservation vouchers.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon"><i class="bi bi-chat-quote-fill"></i></div>
+                    <h3>Gemini Travel Bot</h3>
+                    <p>Chat with a dedicated AI assistant for on-the-go recommendations, packing tips, and local secrets.</p>
+                </div>
             </div>
         </div>
     </section>
-    <footer>
-    <div class="footer-content">
-        <div>
-            <h3>Safarnama</h3>
-            <p>Explore, plan, and travel effortlessly with Expedia.</p>
-        </div>
-        <div>
-            <h3>Contact Us</h3>
-            <p>Email: support@Safarnama.com</p>
-        </div>
-    </div>
-</footer>
 
-</body>
-
-</html>
+    <!-- Footer -->
+    <footer class="safarnama-footer">
+        <div class="footer-content">
+            <div>
+                <h3>Safarnama</h3>
+                <p>Intelligent AI travel assistance for unforgettable journeys.</p>
+            </div>
+            <div>
+                <h3>Contact & Support</h3>
+                <p class="mb-1"><i class="bi bi-envelope me-1"></i> support@safarnama.com</p>
+                <p class="mb-0"><i class="bi bi-globe me-1"></i> Safarnama Travel Platform</p>
+            </div>
+        </div>
+        <div class="text-center pt-4 mt-4 border-top border-secondary opacity-50 small">
+            &copy; 2026 Safarnama. All rights reserved.
+        </div>
+    </footer>
+</div>
 {% endblock content %}

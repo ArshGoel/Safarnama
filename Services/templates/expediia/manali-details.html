@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manali 4-Day Adventure Trip | Safarnama{% endblock title %}
+{% block dashboardactive %}active{% endblock dashboardactive %}
+
+{% block extra_css %}
+<style>
+    .dest-details-wrapper {
+        min-height: calc(100vh - 70px);
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    }
+
+    .dest-hero-header {
+        background: linear-gradient(135deg, #4f46e5, #1e1b4b);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.25);
+    }
+
+    .day-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.09);
+    }
+
+    .day-card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .day-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+    }
+
+    .highlight-list li {
+        margin-bottom: 0.5rem;
+        color: #475569;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="dest-details-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <!-- Header -->
+        <div class="dest-hero-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'itinery' %}" class="btn btn-light btn-sm rounded-pill px-3 text-primary fw-semibold">
+                        <i class="bi bi-magic me-1"></i> Customize with AI
+                    </a>
+                </div>
+            </div>
+            <h1 class="fw-bold text-white mb-2">Manali Alpine Valley Expedition</h1>
+            <p class="text-light opacity-75 mb-0">4 Days Thrills • Solang Valley • Rohtang Pass • Hadimba Temple • Jogini Waterfalls Trek</p>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1587922546307-776227941871?w=900&auto=format&fit=crop&q=80" alt="Manali Arrival & Hadimba" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 1</span>
+                <h3 class="fw-bold text-dark mb-3">Arrival, Hadimba Sanctuary & Old Manali</h3>
+                <ul class="highlight-list">
+                    <li>Arrive in Manali and check into your cozy riverside wooden cottage or resort.</li>
+                    <li>Walk through the serene deodar cedar forests to the ancient wooden Hadimba Devi Temple.</li>
+                    <li>Explore the peaceful grounds of the Himalayan Nyinmapa Tibetan Buddhist Monastery.</li>
+                    <li>Spend the evening cafe-hopping in Old Manali enjoying live rock music and wood-fired pizzas.</li>
+                    <li>Overnight stay in Manali.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=900&auto=format&fit=crop&q=80" alt="Solang Valley & Rohtang Pass" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 2</span>
+                <h3 class="fw-bold text-dark mb-3">Solang Valley Adventures & High Mountain Pass</h3>
+                <ul class="highlight-list">
+                    <li>Early drive up to Solang Valley, India’s premier hub for adventure sports.</li>
+                    <li>Tandem paragliding flight offering bird's-eye views of snow-draped Pir Panjal range.</li>
+                    <li>Optional snow scooter rides and ropeway cable car ascent to Mount Phatru.</li>
+                    <li>Travel through the iconic Atal Tunnel to Sissu for jaw-dropping glacier waterfalls.</li>
+                    <li>Overnight stay in Manali.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&auto=format&fit=crop&q=80" alt="Jogini Waterfall Trek" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 3</span>
+                <h3 class="fw-bold text-dark mb-3">Jogini Waterfalls Nature Trek & Vashisht Hot Springs</h3>
+                <ul class="highlight-list">
+                    <li>Morning guided trek from Vashisht village through apple orchards and pine groves to Jogini Waterfall.</li>
+                    <li>Stand beneath the cascading misty water of the multi-tier fall.</li>
+                    <li>Return to Vashisht to experience the therapeutic natural sulfur hot water springs.</li>
+                    <li>Stroll along the buzzing Mall Road for evening souvenir shopping.</li>
+                    <li>Overnight stay in Manali.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=900&auto=format&fit=crop&q=80" alt="Beas River Rafting" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 4</span>
+                <h3 class="fw-bold text-dark mb-3">Beas River Rafting, Kullu Valley & Departure</h3>
+                <ul class="highlight-list">
+                    <li>Drive down towards Kullu and gear up with lifejackets and helmets for grade 3 white-water rafting on the Beas River.</li>
+                    <li>Visit Naggar Castle, a 500-year-old stone and timber architectural treasure overlooking the Beas valley.</li>
+                    <li>Check out the Nicholas Roerich Art Gallery in Naggar.</li>
+                    <li>Transfer to Bhuntar airport or board luxury overnight sleeper coach for return.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

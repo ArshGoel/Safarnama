@@ -1,25 +1,91 @@
+{% extends "base.html" %}
 {% load static %}
-<!-- generate_story.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Story with Gemini AI</title>
-</head>
-<body>
-    <h1>Generate Story with Gemini AI</h1>
 
-    <form method="POST">
-        {% csrf_token %}
-        <label for="prompt">Enter your prompt:</label><br>
-        <textarea id="prompt" name="prompt" rows="4" cols="50" placeholder="Type your story prompt here"></textarea><br>
-        <button type="submit">Generate Story</button>
-    </form>
+{% block title %}AI Travel Story Generator | Safarnama{% endblock title %}
+{% block storyactive %}active{% endblock storyactive %}
 
-    <h2>Generated Response:</h2>
-    {% if generated_text %}
-        <p>{{ generated_text }}</p>
-    {% endif %}
-</body>
-</html>
+{% block extra_css %}
+<style>
+    .story-page-wrapper {
+        min-height: calc(100vh - 70px);
+        padding: 2.5rem 1rem;
+        background-color: #f8fafc;
+    }
+
+    .story-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        padding: 2.5rem;
+    }
+
+    .story-output-box {
+        background: #f8fafc;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        line-height: 1.7;
+        color: #334155;
+        font-size: 1.05rem;
+        white-space: pre-line;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="story-page-wrapper">
+    <div class="container" style="max-width: 860px;">
+        <div class="story-card mb-4">
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <div class="bg-primary text-white rounded-3 p-3 d-inline-flex">
+                    <i class="bi bi-book-half fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold text-dark mb-1">AI Travel Storyteller</h2>
+                    <p class="text-muted small mb-0">Describe a destination, dream trip, or memory, and let Gemini craft an engaging narrative.</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="prompt" class="form-label fw-semibold text-dark">Enter your story prompt:</label>
+                    <textarea id="prompt" name="prompt" rows="4" class="form-control form-control-lg fs-6" 
+                              placeholder="e.g. Write an enchanting tale of an evening traveler discovering a hidden cafe in the winding lanes of Venice..." required></textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">
+                        <i class="bi bi-magic me-1"></i> Generate Story
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if generated_text and generated_text != "Please provide a prompt to generate content." %}
+        <div class="story-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold text-dark mb-0"><i class="bi bi-stars text-warning me-2"></i>Generated Tale</h4>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="copyStoryText()">
+                    <i class="bi bi-clipboard me-1"></i> Copy
+                </button>
+            </div>
+            <div id="storyOutput" class="story-output-box">
+                {{ generated_text }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    function copyStoryText() {
+        const text = document.getElementById('storyOutput').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Story copied to clipboard!');
+        });
+    }
+</script>
+{% endblock extra_js %}

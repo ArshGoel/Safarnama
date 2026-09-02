@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Himachal 5-Day Explorer | Safarnama{% endblock title %}
+{% block dashboardactive %}active{% endblock dashboardactive %}
+
+{% block extra_css %}
+<style>
+    .dest-details-wrapper {
+        min-height: calc(100vh - 70px);
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    }
+
+    .dest-hero-header {
+        background: linear-gradient(135deg, #059669, #064e3b);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.25);
+    }
+
+    .day-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.09);
+    }
+
+    .day-card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .day-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(5, 150, 105, 0.1);
+        color: #059669;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+    }
+
+    .highlight-list li {
+        margin-bottom: 0.5rem;
+        color: #475569;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="dest-details-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <!-- Header -->
+        <div class="dest-hero-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'itinery' %}" class="btn btn-light btn-sm rounded-pill px-3 text-success fw-semibold">
+                        <i class="bi bi-magic me-1"></i> Customize with AI
+                    </a>
+                </div>
+            </div>
+            <h1 class="fw-bold text-white mb-2">Himachal Mountain Panorama</h1>
+            <p class="text-light opacity-75 mb-0">5 Days Alpine Escape • Shimla Colonial Mall • Kufri Snow Viewpoint • Kullu Valley • Manali Pine Woods</p>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1597074866923-dc0589150358?w=900&auto=format&fit=crop&q=80" alt="Shimla Ridge" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 1</span>
+                <h3 class="fw-bold text-dark mb-3">Arrival in Shimla & The Colonial Ridge</h3>
+                <ul class="highlight-list">
+                    <li>Drive up from Chandigarh or fly into Jubbarhatti Airport, arriving at the Queen of Hills: Shimla.</li>
+                    <li>Stroll along the historic vehicle-free Mall Road and the Ridge.</li>
+                    <li>Visit the neo-Gothic Christ Church and the historic Gaiety Theatre.</li>
+                    <li>Take the Jakhoo Ropeway up to the Jakhoo Hanuman Temple for panoramic peak views.</li>
+                    <li>Overnight stay in Shimla.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=900&auto=format&fit=crop&q=80" alt="Kufri Snow Excursion" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 2</span>
+                <h3 class="fw-bold text-dark mb-3">Kufri Highland Snow Excursion & Chail</h3>
+                <ul class="highlight-list">
+                    <li>Morning trip to Kufri, situated at 2,622 meters above sea level amidst Himalayan cedar groves.</li>
+                    <li>Enjoy horse riding up to Mahasu Peak and go tobogganing on seasonal snow slopes.</li>
+                    <li>Visit the Himalayan Wildlife Zoo home to snow leopards, monal pheasants, and brown bears.</li>
+                    <li>Afternoon drive to Chail to see the world's highest cricket ground and Chail Palace.</li>
+                    <li>Overnight stay in Shimla.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=900&auto=format&fit=crop&q=80" alt="Shimla to Manali Journey" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 3</span>
+                <h3 class="fw-bold text-dark mb-3">Scenic Trans-Himalayan Drive: Shimla to Manali</h3>
+                <ul class="highlight-list">
+                    <li>Depart Shimla along the National Highway traversing picturesque gorges and river valleys.</li>
+                    <li>Stop at the Pandoh Dam reservoir and pass through the Aut tunnel.</li>
+                    <li>Visit Kullu Shawl weaving factories and participate in exhilarating river rafting on the Beas River.</li>
+                    <li>Arrive in Manali surrounded by towering snow-clad peaks.</li>
+                    <li>Overnight stay in Manali.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=900&auto=format&fit=crop&q=80" alt="Solang Valley Adventure" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 4</span>
+                <h3 class="fw-bold text-dark mb-3">Solang Valley & Atal Tunnel Engineering Marvel</h3>
+                <ul class="highlight-list">
+                    <li>Explore Solang Valley for paragliding, zorbing, ATV quad biking, and skiing.</li>
+                    <li>Drive through the 9.02 km long Atal Tunnel under Rohtang Pass into the otherworldly Lahaul Valley (Sissu).</li>
+                    <li>Witness the spectacular frozen Sissu Waterfall and hanging glaciers.</li>
+                    <li>Evening visit to the Tibetan Monastery and bustling Old Manali market.</li>
+                    <li>Overnight stay in Manali.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-card">
+            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=900&auto=format&fit=crop&q=80" alt="Hadimba Temple & Departure" class="day-card-img">
+            <div class="p-4">
+                <span class="day-badge"><i class="bi bi-calendar-event"></i> Day 5</span>
+                <h3 class="fw-bold text-dark mb-3">Hadimba Temple, Vashisht Springs & Departure</h3>
+                <ul class="highlight-list">
+                    <li>Visit the 16th-century wooden Pagoda-style Hadimba Devi Temple surrounded by towering deodar forests.</li>
+                    <li>Dip your feet in the natural medicinal hot sulfur springs of Vashisht village.</li>
+                    <li>Shop for fresh local apples, Himalayan honey, and handmade woolens.</li>
+                    <li>Transfer to Bhuntar Airport (Kullu) or board luxury Volvo bus for departure.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

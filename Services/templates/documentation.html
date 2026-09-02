@@ -1,308 +1,310 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Documents</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+{% block title %}Travel Document Vault | Safarnama{% endblock title %}
+{% block documentationactive %}active{% endblock documentationactive %}
 
-        h2 {
-            color: #333;
-        }
+{% block extra_css %}
+<style>
+    .docs-page-wrapper {
+        min-height: calc(100vh - 70px);
+        padding: 2.5rem 1rem;
+        background-color: #f8fafc;
+    }
 
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+    .vault-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        padding: 2rem;
+    }
 
-        .card-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
+    .upload-btn-custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        color: #ffffff;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        border: none;
+    }
 
-        .card-header h3 {
-            margin: 0;
-        }
+    .upload-btn-custom:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        color: #ffffff;
+    }
 
-        .card-content {
-            padding: 20px;
-        }
+    .doc-item-row {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.15rem 1.25rem;
+        margin-bottom: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        transition: all 0.2s ease;
+    }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    .doc-item-row:hover {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    }
 
-        li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
+    .document-viewer-frame {
+        width: 100%;
+        height: 540px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f1f5f9;
+    }
 
-        .btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
+    .hidden {
+        display: none !important;
+    }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid #007bff;
-            color: #007bff;
-        }
+    .storage-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(6, 182, 212, 0.1);
+        color: #0891b2;
+        border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+</style>
+{% endblock extra_css %}
 
-        .btn-danger {
-            background-color: #dc3545;
-            color: #fff;
-        }
+{% block content %}
+<div class="docs-page-wrapper">
+    <div class="container" style="max-width: 960px;">
+        <div class="vault-card mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary text-white rounded-3 p-3 d-inline-flex">
+                        <i class="bi bi-cloud-check-fill fs-3"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h2 class="fw-bold text-dark mb-0">Travel Document Vault</h2>
+                            <span class="storage-badge"><i class="bi bi-file-earmark-pdf"></i> Free PDF & Doc Viewer</span>
+                        </div>
+                        <p class="text-muted small mb-0 mt-1">Safely store and view your tickets, passports, IDs, and booking vouchers with full native PDF browser preview.</p>
+                    </div>
+                </div>
 
-        .upload-btn {
-            display: inline-block;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .document-viewer {
-            width: 100%;
-            height: 500px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .mt-4 {
-            margin-top: 20px;
-        }
-
-        .mt-6 {
-            margin-top: 30px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Documents</h2>
-        <div class="card">
-            <div class="card-header">
-                <h3>Uploaded Documents</h3>
-            </div>
-            <div class="card-content">
-                <ul id="documentsList"></ul>
-                <div class="mt-4">
-                    <label for="fileUpload" class="upload-btn">Upload New Document</label>
-                    <input id="fileUpload" type="file" accept=".pdf,.png,.jpg,.jpeg" class="hidden">
+                <div>
+                    <label for="docUploadInput" class="upload-btn-custom" id="uploadLabel">
+                        <i class="bi bi-cloud-upload"></i>
+                        <span id="uploadBtnText">Upload Document</span>
+                    </label>
+                    <input id="docUploadInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" class="hidden">
                 </div>
             </div>
+
+            <!-- Upload progress indicator -->
+            <div id="uploadSpinner" class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center gap-2 hidden">
+                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                <span class="small fw-semibold">Storing document safely in database...</span>
+            </div>
+
+            <!-- Documents List from DB -->
+            <h5 class="fw-bold text-dark mb-3">Saved Travel Documents</h5>
+            <div id="documentsListContainer">
+                <ul id="documentsList" class="list-unstyled mb-0">
+                    {% for doc in documents %}
+                    <li class="doc-item-row" id="docRow-{{ doc.id }}">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-light border rounded-3 p-2 text-primary fs-3">
+                                {% if doc.extension == '.pdf' %}
+                                    <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                {% elif doc.extension in '.jpg,.jpeg,.png' %}
+                                    <i class="bi bi-file-earmark-image text-success"></i>
+                                {% else %}
+                                    <i class="bi bi-file-earmark-text text-primary"></i>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1 doc-name-text">{{ doc.name }}</h6>
+                                <div class="d-flex align-items-center gap-2 text-muted small">
+                                    <span><i class="bi bi-hdd me-1"></i>{{ doc.formatted_size }}</span>
+                                    <span>•</span>
+                                    <span><i class="bi bi-calendar3 me-1"></i>{{ doc.created_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="renameDocument({{ doc.id }}, '{{ doc.name|escapejs }}')">
+                                <i class="bi bi-pencil me-1"></i> Rename
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="viewDocument('{% url 'view_document_file' doc.id %}', '{{ doc.name|escapejs }}')">
+                                <i class="bi bi-eye me-1"></i> View
+                            </button>
+                            <a href="{% url 'view_document_file' doc.id %}" target="_blank" class="btn btn-outline-info btn-sm rounded-pill px-3" title="Open full screen in new tab">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Tab
+                            </a>
+                            <a href="{% url 'view_document_file' doc.id %}" download="{{ doc.name }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                <i class="bi bi-download me-1"></i> Download
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm rounded-pill px-2" onclick="deleteDocument({{ doc.id }})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div id="emptyStateDocs" class="text-center py-5 text-muted {% if documents %}hidden{% endif %}">
+                <i class="bi bi-cloud-slash fs-1 opacity-50 d-block mb-2"></i>
+                <p class="mb-0">No travel documents uploaded yet. Click "Upload Document" to store your passes and tickets safely.</p>
+            </div>
         </div>
 
-        <div id="viewerContainer" class="hidden mt-6">
-            <h3 id="viewingDocumentName"></h3>
-            <iframe id="documentViewer" class="document-viewer" title="Document Viewer"></iframe>
-            <button id="closeViewer" class="btn btn-outline mt-4">Close Viewer</button>
+        <!-- Viewer Container -->
+        <div id="viewerContainer" class="vault-card hidden">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h4 id="viewingDocumentName" class="fw-bold text-dark mb-0"></h4>
+                <div class="d-flex gap-2">
+                    <a id="viewerOpenTabBtn" href="#" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Full Screen Tab
+                    </a>
+                    <button id="closeViewer" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="closeViewer()">
+                        <i class="bi bi-x-lg me-1"></i> Close Viewer
+                    </button>
+                </div>
+            </div>
+            <iframe id="documentViewer" class="document-viewer-frame" title="Document Viewer"></iframe>
         </div>
     </div>
+</div>
+{% endblock content %}
 
-    <script>
-        let db;
-        let documents = [];
-        let editingId = null;
+{% block extra_js %}
+<script>
+    const csrfToken = "{{ csrf_token }}";
 
-        // Open IndexedDB
-        const openDB = () => {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('DocumentsDB', 1);
-                
-                request.onerror = () => reject('Error opening database');
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve(db);
-                };
-                request.onupgradeneeded = (event) => {
-                    db = event.target.result;
-                    if (!db.objectStoreNames.contains('documents')) {
-                        db.createObjectStore('documents', { keyPath: 'id' });
-                    }
-                };
-            });
-        };
+    // Handle Document Upload via AJAX
+    document.getElementById('docUploadInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        // Load documents from IndexedDB
-        const loadDocuments = async () => {
-            const transaction = db.transaction(['documents'], 'readonly');
-            const store = transaction.objectStore('documents');
-            const request = store.getAll();
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('name', file.name);
 
-            request.onsuccess = () => {
-                documents = request.result;
-                renderDocuments();
-            };
-        };
+        const spinner = document.getElementById('uploadSpinner');
+        const uploadBtnText = document.getElementById('uploadBtnText');
+        spinner.classList.remove('hidden');
+        uploadBtnText.textContent = "Uploading...";
 
-        // Save a document to IndexedDB
-        const saveDocument = (doc) => {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['documents'], 'readwrite');
-                const store = transaction.objectStore('documents');
-                const request = store.put(doc);
-
-                request.onerror = () => reject('Error saving document');
-                request.onsuccess = () => resolve();
-            });
-        };
-
-        // Delete a document from IndexedDB
-        const deleteDocument = (id) => {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['documents'], 'readwrite');
-                const store = transaction.objectStore('documents');
-                const request = store.delete(id);
-
-                request.onerror = () => reject('Error deleting document');
-                request.onsuccess = () => resolve();
-            });
-        };
-
-        // Render documents list
-        const renderDocuments = () => {
-            const list = document.getElementById('documentsList');
-            list.innerHTML = '';
-
-            documents.forEach(doc => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <p class="font-semibold">${doc.name}</p>
-                        <p class="text-sm text-gray-500">Uploaded: ${doc.date}</p>
-                    </div>
-                    <div>
-                        <button class="btn btn-outline rename-btn" data-id="${doc.id}">Rename</button>
-                        <button class="btn btn-outline view-btn" data-id="${doc.id}">View</button>
-                        <button class="btn btn-outline download-btn" data-id="${doc.id}">Download</button>
-                        <button class="btn btn-danger delete-btn" data-id="${doc.id}">Delete</button>
-                    </div>
-                `;
-                list.appendChild(li);
-            });
-
-            // Add event listeners
-            document.querySelectorAll('.rename-btn').forEach(btn => {
-                btn.addEventListener('click', handleRename);
-            });
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', handleView);
-            });
-            document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.addEventListener('click', handleDownload);
-            });
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', handleDelete);
-            });
-        };
-
-        // Handle file upload
-        const handleUpload = async (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    const newDoc = {
-                        id: Date.now(),
-                        name: file.name,
-                        date: new Date().toISOString().split('T')[0],
-                        fileUrl: e.target.result,
-                    };
-                    await saveDocument(newDoc);
-                    documents.push(newDoc);
-                    renderDocuments();
-                };
-                reader.readAsDataURL(file);
+        fetch("{% url 'upload_document' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            spinner.classList.add('hidden');
+            uploadBtnText.textContent = "Upload Document";
+            if (data.success) {
+                // Reload or dynamically append
+                window.location.reload();
+            } else {
+                alert(data.error || "Upload failed. Please try again.");
             }
-        };
+        })
+        .catch(err => {
+            spinner.classList.add('hidden');
+            uploadBtnText.textContent = "Upload Document";
+            alert("Upload error: " + err);
+        });
+    });
 
-        // Handle document deletion
-        const handleDelete = async (event) => {
-            const id = parseInt(event.target.getAttribute('data-id'));
-            await deleteDocument(id);
-            documents = documents.filter(doc => doc.id !== id);
-            renderDocuments();
-        };
+    // Handle Document Rename via AJAX
+    function renameDocument(docId, currentName) {
+        const newName = prompt("Enter new document name:", currentName);
+        if (!newName || newName.trim() === "" || newName === currentName) return;
 
-        // Handle document renaming
-        const handleRename = (event) => {
-            const id = parseInt(event.target.getAttribute('data-id'));
-            const doc = documents.find(doc => doc.id === id);
-            const newName = prompt('Enter new name:', doc.name);
-            if (newName) {
-                doc.name = newName.endsWith('.pdf') ? newName : `${newName}.pdf`;
-                saveDocument(doc).then(() => {
-                    renderDocuments();
-                });
+        fetch(`/dashboard/documentation/rename/${docId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ name: newName.trim() })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const row = document.getElementById(`docRow-${docId}`);
+                if (row) {
+                    row.querySelector('.doc-name-text').textContent = data.name;
+                }
+            } else {
+                alert(data.error || "Rename failed.");
             }
-        };
+        })
+        .catch(err => alert("Error: " + err));
+    }
 
-        // Handle document viewing
-        const handleView = (event) => {
-            const id = parseInt(event.target.getAttribute('data-id'));
-            const doc = documents.find(doc => doc.id === id);
-            const viewer = document.getElementById('documentViewer');
-            const viewerContainer = document.getElementById('viewerContainer');
-            const viewingDocumentName = document.getElementById('viewingDocumentName');
+    // Handle Document Delete via AJAX
+    function deleteDocument(docId) {
+        if (!confirm("Are you sure you want to delete this document from the database and Cloudinary storage?")) return;
 
-            viewer.src = doc.fileUrl;
-            viewingDocumentName.textContent = `Viewing: ${doc.name}`;
-            viewerContainer.classList.remove('hidden');
-        };
+        fetch(`/dashboard/documentation/delete/${docId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const row = document.getElementById(`docRow-${docId}`);
+                if (row) row.remove();
+                const list = document.getElementById('documentsList');
+                if (!list.children.length) {
+                    document.getElementById('emptyStateDocs').classList.remove('hidden');
+                }
+            } else {
+                alert(data.error || "Delete failed.");
+            }
+        })
+        .catch(err => alert("Error: " + err));
+    }
 
-        // Handle document download
-        const handleDownload = (event) => {
-            const id = parseInt(event.target.getAttribute('data-id'));
-            const doc = documents.find(doc => doc.id === id);
-            const link = document.createElement('a');
-            link.href = doc.fileUrl;
-            link.download = doc.name;
-            link.click();
-        };
+    // View Document in iframe
+    function viewDocument(url, name) {
+        const viewer = document.getElementById('documentViewer');
+        const container = document.getElementById('viewerContainer');
+        const title = document.getElementById('viewingDocumentName');
+        const openTabBtn = document.getElementById('viewerOpenTabBtn');
 
-        // Initialize the application
-        const init = async () => {
-            await openDB();
-            await loadDocuments();
+        viewer.src = url;
+        title.textContent = name;
+        if (openTabBtn) openTabBtn.href = url;
+        container.classList.remove('hidden');
+        container.scrollIntoView({ behavior: 'smooth' });
+    }
 
-            // Add event listeners
-            document.getElementById('fileUpload').addEventListener('change', handleUpload);
-            document.getElementById('closeViewer').addEventListener('click', () => {
-                document.getElementById('viewerContainer').classList.add('hidden');
-            });
-        };
-
-        // Start the application
-        init();
-    </script>
-</body>
-</html>
-
+    function closeViewer() {
+        document.getElementById('viewerContainer').classList.add('hidden');
+        document.getElementById('documentViewer').src = '';
+    }
+</script>
+{% endblock extra_js %}

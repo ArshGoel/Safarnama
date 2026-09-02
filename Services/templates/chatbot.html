@@ -1,227 +1,373 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+
+{% block title %}AI Travel Assistant | Safarnama{% endblock title %}
+{% block chatbotactive %}active{% endblock chatbotactive %}
+
+{% block extra_css %}
+<style>
+    .chatbot-page-wrapper {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+                    #f8fafc;
     }
 
-    .chat-container {
-      width: 600px;
-      height: 700px;
-      background-color: white;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
+    .chat-container-card {
+        width: 100%;
+        max-width: 840px;
+        height: 740px;
+        max-height: calc(100vh - 110px);
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 0 1px 1px rgba(226, 232, 240, 0.8);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(226, 232, 240, 0.8);
     }
 
-    .chat-header {
-      background: linear-gradient(90deg, #4CAF50, #3b82f6);
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .chat-header-bar {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        color: #ffffff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 12px;
+        flex-wrap: wrap;
     }
 
-    .chat-header p {
-      margin: 5px 0 0;
-      font-size: 12px;
-      color: #d0e6ff;
+    .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
-    .back-button {
-      background-color: white;
-      color: #4CAF50;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
+    .chat-bot-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
     }
 
-    .back-button:hover {
-      background-color: #ddd;
+    .chat-bot-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #10b981;
+        display: inline-block;
+        margin-right: 4px;
+        animation: pulseStatus 2s infinite;
     }
 
-    .chat-content {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-      background-color: #f9f9f9;
+    @keyframes pulseStatus {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
     }
 
-    .chat-message {
-      display: flex;
-      margin-bottom: 10px;
-      align-items: center;
+    .chat-content-body {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto;
+        background-color: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
     }
 
-    .chat-message.user {
-      justify-content: flex-end;
+    .chat-msg-row {
+        display: flex;
+        gap: 10px;
+        max-width: 85%;
     }
 
-    .chat-message.bot {
-      justify-content: flex-start;
+    .chat-msg-row.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
     }
 
-    .chat-message .avatar {
-      width: 30px;
-      height: 30px;
-      background-color: #ddd;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 14px;
-      margin-right: 10px;
+    .chat-msg-row.bot {
+        align-self: flex-start;
     }
 
-    .chat-message.user .avatar {
-      margin-right: 0;
-      margin-left: 10px;
+    .msg-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        flex-shrink: 0;
     }
 
-    .message-text {
-      max-width: 70%;
-      padding: 10px;
-      border-radius: 10px;
-      background-color: #e0e0e0;
+    .msg-avatar.user-av {
+        background: #4f46e5;
+        color: #ffffff;
     }
 
-    .chat-message.user .message-text {
-      background-color: #4CAF50;
-      color: white;
+    .msg-avatar.bot-av {
+        background: linear-gradient(135deg, #06b6d4, #4f46e5);
+        color: #ffffff;
     }
 
-    .chat-footer {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #ddd;
+    .msg-bubble {
+        padding: 0.9rem 1.25rem;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        word-break: break-word;
     }
 
-    .chat-footer input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      margin-right: 10px;
+    .chat-msg-row.user .msg-bubble {
+        background: linear-gradient(135deg, #4f46e5, #4338ca);
+        color: #ffffff;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
 
-    .chat-footer button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
+    .chat-msg-row.bot .msg-bubble {
+        background: #ffffff;
+        color: #1e293b;
+        border: 1px solid #e2e8f0;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
     }
 
-    .chat-footer button:hover {
-      background-color: #45a049;
+    .msg-bubble h1, .msg-bubble h2, .msg-bubble h3, .msg-bubble h4 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-top: 0.5rem;
+        margin-bottom: 0.35rem;
+        color: #0f172a;
     }
 
-    .suggested-buttons {
-      display: flex;
-      overflow-x: auto;
-      margin-bottom: 10px;
+    .msg-bubble ul, .msg-bubble ol {
+        padding-left: 1.25rem;
+        margin-bottom: 0.5rem;
     }
 
-    .suggested-buttons button {
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
-      margin-right: 8px;
-      border-radius: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-      white-space: nowrap;
+    .msg-bubble li {
+        margin-bottom: 0.25rem;
     }
 
-    .suggested-buttons button:hover {
-      background-color: #ddd;
+    .msg-bubble p {
+        margin-bottom: 0.5rem;
     }
-  </style>
-</head>
-<body>
+    .msg-bubble p:last-child {
+        margin-bottom: 0;
+    }
 
-  <div class="chat-container">
-    <!-- Chat Header -->
-    <div class="chat-header">
-      <a href="/dashboard">
-      <button class="back-button" >Back</button>
-      </a>
-      Safarnama AI Chatbot
-      <p>Your AI-powered travel assistant</p>
-    </div>
-    
-    <!-- Chat Content -->
-    <div id="chat-content" class="chat-content">
-      <!-- Initial Bot Message -->
-      <div class="chat-message bot">
-        <div class="avatar">B</div>
-        <div class="message-text">
-          Welcome to Safarnama Travel Planner! I'm here to assist you with your travel plans. How can I help you today?
+    /* Suggestions Bar */
+    .chat-suggestions-bar {
+        padding: 0.6rem 1.25rem;
+        background: #ffffff;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .suggestion-chip-btn {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        font-size: 0.825rem;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .suggestion-chip-btn:hover {
+        background: #4f46e5;
+        color: #ffffff;
+        border-color: #4f46e5;
+        transform: translateY(-1px);
+    }
+
+    /* Footer Input */
+    .chat-footer-bar {
+        padding: 0.85rem 1.25rem;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .chat-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 999px;
+        padding: 4px 6px 4px 16px;
+        transition: all 0.2s ease;
+    }
+
+    .chat-input-wrapper:focus-within {
+        background: #ffffff;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .chat-input-field {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 0.95rem;
+        color: #1e293b;
+        outline: none;
+    }
+
+    .chat-send-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #06b6d4);
+        border: none;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .chat-send-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="chatbot-page-wrapper">
+    <div class="chat-container-card">
+        <!-- Chat Header -->
+        <div class="chat-header-bar">
+            <div class="chat-header-info">
+                <div class="chat-bot-avatar">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold text-white">Safarnama Travel Assistant</h6>
+                    <small class="text-light opacity-75">
+                        <span class="chat-bot-status-dot"></span>
+                        Gemini AI Memory Active
+                    </small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                {% if chat_history %}
+                <form action="{% url 'clear_chat' %}" method="POST" class="d-inline" onsubmit="return confirm('Clear chat history from database?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1" title="Clear conversation history">
+                        <i class="bi bi-trash3 me-1"></i> Clear History
+                    </button>
+                </form>
+                {% endif %}
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 py-1">
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard
+                </a>
+            </div>
         </div>
-      </div>
 
-      <!-- Display User Message -->
-      {% if user_message %}
-        <div class="chat-message user">
-          <div class="avatar">U</div>
-          <div class="message-text">{{ user_message }}</div>
+        <!-- Chat Content Stream with Database History -->
+        <div id="chatContentBody" class="chat-content-body">
+            <!-- Initial Welcome Message -->
+            <div class="chat-msg-row bot">
+                <div class="msg-avatar bot-av">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <div class="msg-bubble">
+                    <p class="fw-semibold mb-1">Hello Explorer! 👋</p>
+                    <p>I am your Safarnama AI Travel Companion with continuous conversation memory. I remember what we discussed so you can plan multi-day trips and itineraries seamlessly. Where are we heading?</p>
+                </div>
+            </div>
+
+            <!-- Database Stored Chat History -->
+            {% for chat in chat_history %}
+            <div class="chat-msg-row user">
+                <div class="msg-avatar user-av">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="msg-bubble">
+                    {{ chat.message }}
+                </div>
+            </div>
+
+            <div class="chat-msg-row bot">
+                <div class="msg-avatar bot-av">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="msg-bubble">
+                    {{ chat.response|safe }}
+                </div>
+            </div>
+            {% endfor %}
         </div>
-      {% endif %}
 
-      <!-- Display Bot Response -->
-      {% if bot_response %}
-        <div class="chat-message bot">
-          <div class="avatar">B</div>
-          <div class="message-text">{{ bot_response|safe}}</div>
+        <!-- Suggestion Chips Form -->
+        <div class="chat-suggestions-bar">
+            <form action="{% url 'chatbot' %}" method="POST" class="d-inline-flex gap-2">
+                {% csrf_token %}
+                <button type="submit" name="message" value="What are the top 5 must-visit budget destinations in India?" class="suggestion-chip-btn">
+                    <i class="bi bi-geo-alt"></i> Top destinations
+                </button>
+                <button type="submit" name="message" value="What is the best time of year to visit Himachal and Kashmir?" class="suggestion-chip-btn">
+                    <i class="bi bi-sun"></i> Best season to travel
+                </button>
+                <button type="submit" name="message" value="Give me a quick checklist of essential items to pack for an international trip." class="suggestion-chip-btn">
+                    <i class="bi bi-check2-square"></i> Packing checklist
+                </button>
+                <button type="submit" name="message" value="Share 3 secret tips for getting cheap flight tickets." class="suggestion-chip-btn">
+                    <i class="bi bi-airplane"></i> Cheap flight tips
+                </button>
+            </form>
         </div>
-      {% endif %}
+
+        <!-- Chat Input Form -->
+        <div class="chat-footer-bar">
+            <form action="{% url 'chatbot' %}" method="POST" id="chatForm">
+                {% csrf_token %}
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatInput" name="message" class="chat-input-field" 
+                           placeholder="Ask Safarnama anything about your journey..." required autofocus autocomplete="off">
+                    <button type="submit" class="chat-send-btn" title="Send Message">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
+{% endblock content %}
 
-    <!-- Suggested Responses -->
-    <div class="suggested-buttons">
-      <form action="{% url 'chatbot' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit" name="message" value="Popular destinations">Popular destinations</button>
-        <button type="submit" name="message" value="Best time to visit">Best time to visit</button>
-        <button type="submit" name="message" value="Budget-friendly options">Budget-friendly options</button>
-        <button type="submit" name="message" value="Flight information">Flight information</button>
-      </form>
-    </div>
-
-    <!-- User Input Form -->
-    <form action="{% url 'chatbot' %}" method="POST">
-      {% csrf_token %}
-      <div class="chat-footer">
-        <input id="chat-input" type="text" name="message" placeholder="Type your message...">
-        <button type="submit">Send</button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    function goBack() {
-      window.history.back();
+{% block extra_js %}
+<script>
+    // Auto-scroll chat to latest message on load
+    const chatContainer = document.getElementById('chatContentBody');
+    if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-  </script>
-
-</body>
-</html>
-{% comment %} {% endblock content %} {% endcomment %}
+</script>
+{% endblock extra_js %}

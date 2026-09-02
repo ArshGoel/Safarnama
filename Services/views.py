@@ -1,13 +1,17 @@
-# views.py
 import os
 import re
 import json
+import mimetypes
 import requests
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.conf import settings
 from google import genai
+from google.genai import types
+
+from .models import ChatMessage, TravelDocument
 
 
 def get_gemini_client():
@@ -15,34 +19,21 @@ def get_gemini_client():
     return genai.Client(api_key=api_key)
 
 
-def generate_gemini_content(prompt, model=None):
+def get_session_key(request):
+    if not request.session.session_key:
+        request.session.create()
+    return request.session.session_key
+
+
+def get_user_filter_kwargs(request):
     """
-    Generates text content using the official Google GenAI SDK.
-    Uses chat session with fallback support to ensure high availability.
+    Returns query filter kwargs matching either the authenticated user
+    or the current anonymous session.
     """
-    client = get_gemini_client()
-    primary_model = model or getattr(settings, 'GEMINI_MODEL', 'gemini-3.5-flash-lite')
-
-    models_to_try = [primary_model]
-    if primary_model != 'gemini-3.5-flash':
-        models_to_try.append('gemini-3.5-flash')
-    if 'gemini-3.1-flash-lite' not in models_to_try:
-        models_to_try.append('gemini-3.1-flash-lite')
-
-    last_error = None
-    for m in models_to_try:
-        try:
-            chat = client.chats.create(model=m)
-            response = chat.send_message(prompt)
-            if response and response.text:
-                return response.text
-        except Exception as err:
-            last_error = err
-            continue
-
-    if last_error:
-        raise last_error
-    return ""
+    if request.user.is_authenticated:
+        return {'user': request.user}
+    else:
+        return {'session_key': get_session_key(request), 'user__isnull': True}
 
 
 def clean_html_response(text):
@@ -58,21 +49,50 @@ def clean_html_response(text):
     return cleaned.strip()
 
 
+def generate_gemini_content(prompt, history=None, model=None):
+    """
+    Generates text content using the official Google GenAI SDK.
+    Supports chat history so the conversation has continuous memory.
+    """
+    client = get_gemini_client()
+    primary_model = model or getattr(settings, 'GEMINI_MODEL', 'gemini-3.5-flash-lite')
+
+    models_to_try = [primary_model]
+    if primary_model != 'gemini-3.5-flash':
+        models_to_try.append('gemini-3.5-flash')
+    if 'gemini-3.1-flash-lite' not in models_to_try:
+        models_to_try.append('gemini-3.1-flash-lite')
+
+    last_error = None
+    for m in models_to_try:
+        try:
+            if history:
+                chat = client.chats.create(model=m, history=history)
+            else:
+                chat = client.chats.create(model=m)
+            response = chat.send_message(prompt)
+            if response and response.text:
+                return response.text
+        except Exception as err:
+            last_error = err
+            continue
+
+    if last_error:
+        raise last_error
+    return ""
+
+
 def generate_story(request):
-    # Default response
     generated_text = "Please provide a prompt to generate content."
 
     if request.method == "POST":
-        # Get the prompt from the user input
         prompt = request.POST.get('prompt')
-
         if prompt:
             try:
                 generated_text = generate_gemini_content(prompt)
             except Exception as e:
                 generated_text = f"Error: {str(e)}"
 
-    # Render the result in the template
     return render(request, 'generate_story.html', {'generated_text': generated_text})
 
 
@@ -81,61 +101,91 @@ def dashboard(request):
 
 
 def get_weather(request):
-    # Default response
     weather_data = "Please provide a city to get the weather forecast."
 
     if request.method == "POST":
-        # Get the city name from the user input
         city = request.POST.get('city')
-
         if city:
             try:
-                # Make a GET request to wttr.in with the city name
                 url = f"https://wttr.in/{city}?format=%C+%t+%w"
                 response = requests.get(url)
                 response_text = response.text.strip()
 
                 if response.status_code == 200 and response_text:
-                    # Format the response text into a readable format
                     weather_data = f"Weather in {city}: {response_text}"
                 else:
                     weather_data = "Error: Unable to fetch weather data."
-
             except Exception as e:
                 weather_data = f"Error: {str(e)}"
 
-    # Render the weather data in the template
     return render(request, 'weather_forecast.html', {'weather_data': weather_data})
 
 
 def chatbot(request):
+    """
+    Chatbot with persistent memory stored in database (ChatMessage model).
+    Remembers previous conversation context using Gemini multi-turn history.
+    """
+    filter_kwargs = get_user_filter_kwargs(request)
+
     if request.method == 'POST':
-        user_message = request.POST.get('message', '')
+        user_message = request.POST.get('message', '').strip()
         if user_message:
-            try:
-                prompt = (
-                    f"{user_message}\n\n"
-                    "Please provide the answer in HTML format, including appropriate HTML tags "
-                    "such as <h1>, <p>, <ul>, <li>, etc., for headings, paragraphs, and lists."
+            # 1. Fetch recent conversation history (last 10 messages) for context
+            past_chats = ChatMessage.objects.filter(**filter_kwargs).order_by('created_at')[:10]
+            gemini_history = []
+            for item in past_chats:
+                gemini_history.append(
+                    types.Content(role='user', parts=[types.Part.from_text(text=item.message)])
                 )
-                bot_response = generate_gemini_content(prompt)
+                gemini_history.append(
+                    types.Content(role='model', parts=[types.Part.from_text(text=item.response)])
+                )
+
+            # 2. Formulate prompt instruction with HTML format
+            formatted_prompt = (
+                f"{user_message}\n\n"
+                "(Please provide the answer formatted cleanly in HTML tags such as "
+                "<h1>, <p>, <ul>, <li>, <strong>, etc., without markdown code blocks.)"
+            )
+
+            try:
+                bot_response = generate_gemini_content(formatted_prompt, history=gemini_history)
                 bot_response = clean_html_response(bot_response)
             except Exception as e:
                 bot_response = f"<p>Error: {str(e)}</p>"
-            return render(request, 'chatbot.html', {'user_message': user_message, 'bot_response': bot_response})
 
-    return render(request, 'chatbot.html')
+            # 3. Store conversation in database
+            ChatMessage.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                session_key=get_session_key(request),
+                message=user_message,
+                response=bot_response
+            )
+
+            # Redirect to GET to prevent form re-submission on refresh
+            return redirect('chatbot')
+
+    # GET request: load complete chat history from DB
+    chat_history = ChatMessage.objects.filter(**filter_kwargs).order_by('created_at')
+    return render(request, 'chatbot.html', {'chat_history': chat_history})
+
+
+@require_POST
+def clear_chat(request):
+    """Clears conversation history for the current user/session."""
+    filter_kwargs = get_user_filter_kwargs(request)
+    ChatMessage.objects.filter(**filter_kwargs).delete()
+    return redirect('chatbot')
 
 
 def itinery(request):
     if request.method == 'POST':
-        # Handle form submission
         location = request.POST.get('location')
         no_of_days = request.POST.get('noOfDays')
         budget = request.POST.get('budget')
         traveler = request.POST.get('traveler')
 
-        # Create a prompt for generating the trip itinerary
         prompt = (
             f"Generate a detailed travel itinerary for a trip to {location} for {no_of_days} days "
             f"for a {traveler} with a {budget} budget. Please provide the itinerary in HTML format, "
@@ -145,7 +195,6 @@ def itinery(request):
         try:
             generated_text = generate_gemini_content(prompt)
             generated_text = clean_html_response(generated_text)
-            # Pass the generated text to the template
             return render(request, 'trip_result.html', {'trip_itinerary': generated_text})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
@@ -153,20 +202,137 @@ def itinery(request):
     return render(request, 'itinery.html')
 
 
-# Create a new view to render the generated content (itinerary)
 def trip_result(request, trip_id):
-    # Fetch the itinerary from the database or generate based on trip_id
-    # For now, we assume the content is stored in a variable after generation.
-
-    # Placeholder itinerary data
     trip_itinerary = "This is a generated itinerary for your trip! Enjoy your stay!"
-
     return render(request, 'trip_result.html', {"trip_itinerary": trip_itinerary})
 
 
 def documentation(request):
-    return render(request, "documentation.html")
+    """
+    Renders document vault with documents stored in database (TravelDocument model)
+    and backed by Cloudinary storage.
+    """
+    filter_kwargs = get_user_filter_kwargs(request)
+    documents = TravelDocument.objects.filter(**filter_kwargs).order_by('-created_at')
+    return render(request, "documentation.html", {'documents': documents})
+
+
+@require_POST
+def upload_document(request):
+    """
+    Uploads a travel document, storing metadata in DB and file in Cloudinary.
+    """
+    file_obj = request.FILES.get('file')
+    if not file_obj:
+        return JsonResponse({'error': 'No file was provided'}, status=400)
+
+    name = request.POST.get('name') or file_obj.name
+    doc = TravelDocument.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        session_key=get_session_key(request),
+        name=name,
+        file=file_obj,
+        file_size=file_obj.size
+    )
+
+    return JsonResponse({
+        'success': True,
+        'document': {
+            'id': doc.id,
+            'name': doc.name,
+            'url': doc.file.url,
+            'formatted_size': doc.formatted_size,
+            'date': doc.created_at.strftime('%Y-%m-%d'),
+            'extension': doc.extension
+        }
+    })
+
+
+@require_POST
+def rename_document(request, doc_id):
+    """Renames an existing travel document in the database."""
+    filter_kwargs = get_user_filter_kwargs(request)
+    filter_kwargs['id'] = doc_id
+    doc = get_object_or_404(TravelDocument, **filter_kwargs)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        new_name = data.get('name', '').strip()
+    except Exception:
+        new_name = request.POST.get('name', '').strip()
+
+    if not new_name:
+        return JsonResponse({'error': 'New name cannot be empty'}, status=400)
+
+    doc.name = new_name
+    doc.save()
+    return JsonResponse({'success': True, 'id': doc.id, 'name': doc.name})
+
+
+@require_POST
+def delete_document(request, doc_id):
+    """Deletes a travel document from database and storage."""
+    filter_kwargs = get_user_filter_kwargs(request)
+    filter_kwargs['id'] = doc_id
+    doc = get_object_or_404(TravelDocument, **filter_kwargs)
+
+    try:
+        doc.file.delete(save=False)
+    except Exception:
+        pass
+
+    doc.delete()
+    return JsonResponse({'success': True, 'id': doc_id})
+
+
+def view_document_file(request, doc_id):
+    """
+    Streams the uploaded document or PDF directly with inline Content-Disposition,
+    allowing in-browser native PDF viewing with zero Cloudinary plan restrictions.
+    """
+    filter_kwargs = get_user_filter_kwargs(request)
+    filter_kwargs['id'] = doc_id
+    doc = get_object_or_404(TravelDocument, **filter_kwargs)
+
+    try:
+        file_path = doc.file.path
+        if os.path.exists(file_path):
+            mime_type, _ = mimetypes.guess_type(doc.file.name)
+            mime_type = mime_type or 'application/pdf'
+            response = FileResponse(open(file_path, 'rb'), content_type=mime_type)
+            response['Content-Disposition'] = f'inline; filename="{doc.name}"'
+            response['X-Frame-Options'] = 'SAMEORIGIN'
+            return response
+    except Exception:
+        pass
+
+    return redirect(doc.file.url)
+
+
+DESTINATION_TEMPLATES = {
+    'gujarat': 'expediia/gujrat-details.html',
+    'gujrat': 'expediia/gujrat-details.html',
+    'goa': 'expediia/goa-details.html',
+    'chardham': 'expediia/chardham-details.html',
+    'himachal': 'expediia/himachal-details.html',
+    'manali': 'expediia/manali-details.html',
+    'srinagar': 'expediia/srinagar-details.html',
+}
+
+
+def destination_detail(request, slug):
+    """Renders the detailed day-by-day travel itinerary for a destination."""
+    template_name = DESTINATION_TEMPLATES.get(slug.lower())
+    if not template_name:
+        raise Http404(f"Destination '{slug}' not found.")
+    return render(request, template_name, {'slug': slug})
+
+
+def travel_planner(request):
+    """Renders the interactive travel planner."""
+    return render(request, 'expediia/plan.html')
 
 
 def weather(request):
     return render(request, "weather.html")
+

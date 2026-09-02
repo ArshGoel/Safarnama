@@ -1,183 +1,271 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Forecast</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-<<<<<<< HEAD
-            background-image: linear-gradient(to bottom, #57b1ff, #3498db);
-=======
-            background-image: linear-gradient(to bottom,rgb(255, 255, 255),rgb(255, 255, 255));
->>>>>>> 0b634fc743c4f25f0e09fcf2746ca07a5f81d8ec
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            width: 50%;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-    <!-- Landing Page -->
-    <div id="landing-page" class="container text-center">
-        <h1 class="display-3">Weather Forecast</h1>
-        <p class="lead">Get the latest 5-day weather forecast for any location.</p>
-        <button id="start-button" class="btn btn-primary">Start</button>
+{% block title %}Weather Forecast | Safarnama{% endblock title %}
+{% block get_weatheractive %}active{% endblock get_weatheractive %}
+
+{% block extra_css %}
+<style>
+    .weather-page-wrapper {
+        min-height: calc(100vh - 70px);
+        padding: 2.5rem 1rem;
+        background: radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.08) 0%, transparent 40%),
+                    #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .weather-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px -5px rgba(15, 23, 42, 0.1);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 680px;
+        text-align: center;
+    }
+
+    .weather-icon-badge {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 2rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .temp-highlight {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1;
+        margin: 1rem 0;
+    }
+
+    .weather-stat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f1f5f9;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        color: #475569;
+        font-weight: 600;
+        margin: 0.25rem;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="weather-page-wrapper">
+    <div class="weather-card">
+        <!-- Landing View -->
+        <div id="landing-page">
+            <div class="weather-icon-badge">
+                <i class="bi bi-cloud-sun"></i>
+            </div>
+            <h2 class="fw-bold text-dark mb-2">Live Travel Weather</h2>
+            <p class="text-muted mb-4">Check live conditions and a 5-day forecast for any city or destination worldwide.</p>
+            <button id="start-button" class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold">
+                <i class="bi bi-search me-1"></i> Look Up Destination
+            </button>
+        </div>
+
+        <!-- Location Input View -->
+        <div id="location-page" class="hidden">
+            <h3 class="fw-bold text-dark mb-3">Enter Destination</h3>
+            <div class="input-group input-group-lg mb-3">
+                <span class="input-group-text bg-light"><i class="bi bi-geo-alt text-primary"></i></span>
+                <input id="location-input" type="text" class="form-control" placeholder="e.g. London, Tokyo, Mumbai, New York" autofocus>
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+                <button id="back-button" class="btn btn-outline-secondary rounded-pill px-4">Back</button>
+                <button id="get-weather-button" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-cloud-arrow-down me-1"></i> Fetch Forecast
+                </button>
+            </div>
+        </div>
+
+        <!-- Weather Display View -->
+        <div id="weather-page" class="hidden text-start">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 id="location-name" class="fw-bold mb-0 text-dark"></h2>
+                    <span id="weather-description" class="badge bg-primary mt-1"></span>
+                </div>
+                <div id="temperature" class="temp-highlight"></div>
+            </div>
+
+            <div class="mb-4">
+                <div class="weather-stat-pill">
+                    <i class="bi bi-wind text-info"></i>
+                    <span id="wind-speed"></span>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3 text-dark">5-Day Weather Forecast</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Precipitation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forecast-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-3">
+                <button id="back-to-location-button" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-1"></i> Check Another City
+                </button>
+            </div>
+        </div>
+
+        <!-- Error View -->
+        <div id="error-page" class="hidden">
+            <div class="text-danger mb-3">
+                <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+            </div>
+            <h4 class="fw-bold text-dark">Weather Lookup Error</h4>
+            <p id="error-message" class="text-muted"></p>
+            <button id="back-to-location-button-error" class="btn btn-primary rounded-pill px-4">
+                Try Again
+            </button>
+        </div>
     </div>
+</div>
+{% endblock content %}
 
-    <!-- Location Input Page -->
-    <div id="location-page" class="container text-center hidden">
-        <h1>Enter Location</h1>
-        <input id="location-input" type="text" class="form-control my-2" placeholder="Enter city name">
-        <button id="back-button" class="btn btn-secondary me-2">Back</button>
-        <button id="get-weather-button" class="btn btn-primary">Get Weather</button>
-    </div>
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/search";
+        const OPEN_METEO_API_URL = "https://api.open-meteo.com/v1/forecast";
 
-    <!-- Weather Display Page -->
-    <div id="weather-page" class="container text-center hidden">
-        <h1 id="location-name"></h1>
-        <p id="weather-description"></p>
-        <p id="temperature"></p>
-        <p id="wind-speed"></p>
-        <h2>5-Day Forecast</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>High Temp</th>
-                    <th>Low Temp</th>
-                    <th>Precipitation</th>
-                </tr>
-            </thead>
-            <tbody id="forecast-table-body"></tbody>
-        </table>
-        <button id="back-to-location-button" class="btn btn-secondary">Back to Location</button>
-    </div>
+        const landingPage = document.getElementById("landing-page");
+        const locationPage = document.getElementById("location-page");
+        const weatherPage = document.getElementById("weather-page");
+        const errorPage = document.getElementById("error-page");
+        
+        const locationInput = document.getElementById("location-input");
+        const forecastTableBody = document.getElementById("forecast-table-body");
 
-    <!-- Error Page -->
-    <div id="error-page" class="container text-center hidden">
-        <h1>Error</h1>
-        <p id="error-message"></p>
-        <button id="back-to-location-button-error" class="btn btn-secondary">Back to Location</button>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/search";
-            const OPEN_METEO_API_URL = "https://api.open-meteo.com/v1/forecast";
-
-            const landingPage = document.getElementById("landing-page");
-            const locationPage = document.getElementById("location-page");
-            const weatherPage = document.getElementById("weather-page");
-            const errorPage = document.getElementById("error-page");
-            
-            const locationInput = document.getElementById("location-input");
-            const forecastTableBody = document.getElementById("forecast-table-body");
-
-            // Buttons
-            document.getElementById("start-button").addEventListener("click", () => {
-                landingPage.classList.add("hidden");
-                locationPage.classList.remove("hidden");
-            });
-
-            document.getElementById("back-button").addEventListener("click", () => {
-                locationPage.classList.add("hidden");
-                landingPage.classList.remove("hidden");
-            });
-
-            document.getElementById("get-weather-button").addEventListener("click", fetchWeather);
-
-            document.getElementById("back-to-location-button").addEventListener("click", () => {
-                weatherPage.classList.add("hidden");
-                locationPage.classList.remove("hidden");
-            });
-
-            document.getElementById("back-to-location-button-error").addEventListener("click", () => {
-                errorPage.classList.add("hidden");
-                locationPage.classList.remove("hidden");
-            });
-
-            function fetchWeather() {
-                const location = locationInput.value;
-                if (!location) {
-                    showError("Please enter a location");
-                    return;
-                }
-
-                locationPage.classList.add("hidden");
-
-                fetch(`${NOMINATIM_API_URL}?q=${location}&format=json&limit=1`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) throw new Error("Location not found.");
-
-                        const { lat, lon } = data[0];
-
-                        return fetch(`${OPEN_METEO_API_URL}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum`);
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const currentWeather = data.current_weather;
-                        const forecast = data.daily;
-                        
-                        document.getElementById("location-name").textContent = locationInput.value;
-                        document.getElementById("weather-description").textContent = `Weather: ${getWeatherDescription(currentWeather.weathercode)}`;
-                        document.getElementById("temperature").textContent = `Temperature: ${currentWeather.temperature}°C`;
-                        document.getElementById("wind-speed").textContent = `Wind Speed: ${currentWeather.windspeed} km/h`;
-
-                        forecastTableBody.innerHTML = "";
-                        for (let i = 0; i < forecast.time.length; i++) {
-                            const row = `<tr>
-                                <td>${forecast.time[i].split("T")[0]}</td>
-                                <td>${forecast.temperature_2m_max[i]}°C</td>
-                                <td>${forecast.temperature_2m_min[i]}°C</td>
-                                <td>${forecast.precipitation_sum[i]} mm</td>
-                            </tr>`;
-                            forecastTableBody.innerHTML += row;
-                        }
-
-                        weatherPage.classList.remove("hidden");
-                    })
-                    .catch(error => showError(error.message));
-            }
-
-            function showError(message) {
-                document.getElementById("error-message").textContent = message;
-                errorPage.classList.remove("hidden");
-            }
-
-            function getWeatherDescription(code) {
-                const descriptions = {
-                    0: "Clear sky",
-                    1: "Mainly clear",
-                    2: "Partly cloudy",
-                    3: "Overcast",
-                    45: "Fog",
-                    51: "Light drizzle",
-                    61: "Slight rain",
-                    63: "Moderate rain",
-                    65: "Heavy rain",
-                    71: "Slight snowfall",
-                    75: "Heavy snowfall",
-                    80: "Rain showers",
-                    95: "Thunderstorm",
-                };
-                return descriptions[code] || "Unknown weather";
-            }
+        // Buttons
+        document.getElementById("start-button").addEventListener("click", () => {
+            landingPage.classList.add("hidden");
+            locationPage.classList.remove("hidden");
+            locationInput.focus();
         });
-    </script>
-</body>
-</html>
+
+        document.getElementById("back-button").addEventListener("click", () => {
+            locationPage.classList.add("hidden");
+            landingPage.classList.remove("hidden");
+        });
+
+        document.getElementById("get-weather-button").addEventListener("click", fetchWeather);
+
+        locationInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") fetchWeather();
+        });
+
+        document.getElementById("back-to-location-button").addEventListener("click", () => {
+            weatherPage.classList.add("hidden");
+            locationPage.classList.remove("hidden");
+        });
+
+        document.getElementById("back-to-location-button-error").addEventListener("click", () => {
+            errorPage.classList.add("hidden");
+            locationPage.classList.remove("hidden");
+        });
+
+        function fetchWeather() {
+            const location = locationInput.value.trim();
+            if (!location) {
+                showError("Please enter a destination city name.");
+                return;
+            }
+
+            locationPage.classList.add("hidden");
+
+            fetch(`${NOMINATIM_API_URL}?q=${encodeURIComponent(location)}&format=json&limit=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) throw new Error("Location not found. Please verify spelling.");
+
+                    const { lat, lon, display_name } = data[0];
+
+                    return fetch(`${OPEN_METEO_API_URL}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`)
+                        .then(res => res.json())
+                        .then(weatherData => ({ weatherData, display_name }));
+                })
+                .then(({ weatherData, display_name }) => {
+                    const currentWeather = weatherData.current_weather;
+                    const forecast = weatherData.daily;
+                    
+                    const shortName = display_name.split(',')[0];
+                    document.getElementById("location-name").textContent = shortName;
+                    document.getElementById("weather-description").textContent = getWeatherDescription(currentWeather.weathercode);
+                    document.getElementById("temperature").textContent = `${Math.round(currentWeather.temperature)}°C`;
+                    document.getElementById("wind-speed").textContent = `Wind: ${currentWeather.windspeed} km/h`;
+
+                    forecastTableBody.innerHTML = "";
+                    for (let i = 0; i < forecast.time.length; i++) {
+                        const row = `<tr>
+                            <td class="fw-semibold">${forecast.time[i]}</td>
+                            <td class="text-danger fw-bold">${Math.round(forecast.temperature_2m_max[i])}°C</td>
+                            <td class="text-primary fw-bold">${Math.round(forecast.temperature_2m_min[i])}°C</td>
+                            <td>${forecast.precipitation_sum[i]} mm</td>
+                        </tr>`;
+                        forecastTableBody.innerHTML += row;
+                    }
+
+                    weatherPage.classList.remove("hidden");
+                })
+                .catch(error => showError(error.message));
+        }
+
+        function showError(message) {
+            document.getElementById("error-message").textContent = message;
+            locationPage.classList.add("hidden");
+            weatherPage.classList.add("hidden");
+            errorPage.classList.remove("hidden");
+        }
+
+        function getWeatherDescription(code) {
+            const descriptions = {
+                0: "Clear sky",
+                1: "Mainly clear",
+                2: "Partly cloudy",
+                3: "Overcast",
+                45: "Fog",
+                51: "Light drizzle",
+                61: "Slight rain",
+                63: "Moderate rain",
+                65: "Heavy rain",
+                71: "Slight snowfall",
+                75: "Heavy snowfall",
+                80: "Rain showers",
+                95: "Thunderstorm",
+            };
+            return descriptions[code] || "Clear conditions";
+        }
+    });
+</script>
+{% endblock extra_js %}

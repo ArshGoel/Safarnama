@@ -4,98 +4,353 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock title %}</title>
+    <title>{% block title %}Safarnama | AI Travel Experience{% endblock title %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="icon" href="{% static "images/logo.png" %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+
+    <style>
+        :root {
+            --safarnama-primary: #4f46e5;
+            --safarnama-primary-hover: #4338ca;
+            --safarnama-accent: #06b6d4;
+            --safarnama-bg: #f8fafc;
+            --safarnama-dark-bg: #0f172a;
+            --safarnama-nav-bg: rgba(15, 23, 42, 0.94);
+            --safarnama-card: #ffffff;
+            --safarnama-border: rgba(226, 232, 240, 0.8);
+            --safarnama-text: #1e293b;
+            --safarnama-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--safarnama-bg);
+            color: var(--safarnama-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Modern Sticky Navbar */
+        .safarnama-navbar {
+            background: var(--safarnama-nav-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.15);
+            padding: 0.65rem 1rem;
+        }
+
+        .safarnama-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .safarnama-brand img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .safarnama-brand .brand-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: #ffffff;
+            padding: 2px 7px;
+            border-radius: 999px;
+            margin-left: 4px;
+        }
+
+        .safarnama-nav-link {
+            color: #cbd5e1 !important;
+            font-size: 0.925rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .safarnama-nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .safarnama-nav-link.active {
+            color: #ffffff !important;
+            background: rgba(79, 70, 229, 0.35);
+            border: 1px solid rgba(79, 70, 229, 0.5);
+            font-weight: 600;
+        }
+
+        .nav-btn-auth {
+            border-radius: 999px;
+            padding: 0.45rem 1.15rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn-login {
+            color: #ffffff;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-btn-login:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn-register {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+
+        .nav-btn-register:hover {
+            color: #ffffff;
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.45);
+        }
+
+        .nav-user-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-user-badge:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        /* Main Content Wrapper: Prevents navbar overlap */
+        .safarnama-main {
+            flex: 1 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Django Flash Messages Container */
+        .safarnama-messages-container {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            z-index: 1080;
+            max-width: 400px;
+            width: calc(100% - 40px);
+        }
+
+        .safarnama-toast {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-left: 5px solid;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideInRight 0.35s ease forwards;
+        }
+
+        .safarnama-toast.toast-success { border-color: #10b981; }
+        .safarnama-toast.toast-error, .safarnama-toast.toast-danger { border-color: #ef4444; }
+        .safarnama-toast.toast-warning { border-color: #f59e0b; }
+        .safarnama-toast.toast-info { border-color: #3b82f6; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock extra_css %}
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="{% static "images/logo.png" %}" alt="Bootstrap" width="100" height="50">
-              </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    <nav class="navbar navbar-expand-lg safarnama-navbar">
+        <div class="container-fluid px-lg-4">
+            <a class="safarnama-brand" href="/">
+                <img src="{% static 'images/logo.png' %}" alt="Safarnama" width="36" height="36" onerror="this.style.display='none'">
+                <span>Safarnama</span>
+                <span class="brand-badge">AI</span>
+            </a>
+
+            <button class="navbar-toggler border-0 text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <i class="bi bi-list fs-2"></i>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block homeactive %}{% endblock homeactive %}" href="/">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
                     {% if request.user.is_authenticated %}
-                    <li class="nav-item " >
-                        <a class="nav-link {% block dashboardactive %}{% endblock dashboardactive %}" aria-current="page" href="{%url 'dashboard'%}">Dashboard</a>
-                    </li>
-                    <li class="nav-item " >
-                        <a class="nav-link {% block chatbotactive %}{% endblock chatbotactive %}" aria-current="page" href="{%url 'chatbot'%}">Chatbot</a>
-                    </li>
-                    <li class="nav-item " >
-                        <a class="nav-link {% block itineraryactive %}{% endblock itineraryactive %}" aria-current="page" href="{%url 'itinery'%}">Itinerary</a>
-                    </li>
-                    <li class="nav-item " >
-                        <a class="nav-link {% block documentationactive %}{% endblock documentationactive %}" aria-current="page" href="{%url 'documentation'%}">Documentation</a>
-                    </li>
-                    <li class="nav-item " >
-                        <a class="nav-link {% block get_weatheractive %}{% endblock get_weatheractive %}" aria-current="page" href="{%url 'get_weather'%}">Weather</a>
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block dashboardactive %}{% endblock dashboardactive %}" href="{% url 'dashboard' %}">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="{%url 'logout'%}">Logout</a>
+                        <a class="safarnama-nav-link {% block chatbotactive %}{% endblock chatbotactive %}" href="{% url 'chatbot' %}">
+                            <i class="bi bi-chat-dots"></i> Chatbot
+                        </a>
                     </li>
-                    {% else %}
-                    <li class="nav-item ">
-                        <a class="nav-link {% block loginactive %}{% endblock loginactive %}" href="{%url 'login'%}">Login</a>
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block itineraryactive %}{% endblock itineraryactive %}" href="{% url 'itinery' %}">
+                            <i class="bi bi-map"></i> Itinerary
+                        </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link {% block registeractive %}{% endblock registeractive %}" href="{%url 'register'%}">Register</a>
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block storyactive %}{% endblock storyactive %}" href="{% url 'generate_story' %}">
+                            <i class="bi bi-journal-text"></i> Story AI
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block get_weatheractive %}{% endblock get_weatheractive %}" href="{% url 'get_weather' %}">
+                            <i class="bi bi-cloud-sun"></i> Weather
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="safarnama-nav-link {% block documentationactive %}{% endblock documentationactive %}" href="{% url 'documentation' %}">
+                            <i class="bi bi-file-earmark-lock"></i> Docs Vault
+                        </a>
                     </li>
                     {% endif %}
-                </ul>   
-                {% if request.user.is_authenticated %}
-                <a href="{%url 'profile'%}" title="Hello {{request.user}}">
-                <svg xmlns="http://www.w3.org/2000/svg"   width="20" height="20" fill="white" class="bi bi-person-circle " style="align:center" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                  </svg>  
-                </a> 
-                {% endif %} 
-                {% comment %} <a class="{% block profileactive %}{% endblock profileactive %}" href="{%url 'profile'%}">{{request.user}}</a> {% endcomment %}
+                </ul>
+
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="nav-user-badge {% block profileactive %}{% endblock profileactive %}" title="Profile">
+                        <i class="bi bi-person-circle fs-5 text-info"></i>
+                        <span>{{ request.user.username|default:"Profile" }}</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 ms-1 d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                    {% else %}
+                    <a class="nav-btn-auth nav-btn-login {% block loginactive %}{% endblock loginactive %}" href="{% url 'login' %}">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </a>
+                    <a class="nav-btn-auth nav-btn-register {% block registeractive %}{% endblock registeractive %}" href="{% url 'register' %}">
+                        <i class="bi bi-person-plus"></i> Register
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
-    {% block content %}
 
-    {% endblock content %}
-    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="ModalLabel"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="ModalBody">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+    <!-- Global Toast Notifications for Django messages -->
+    {% if messages %}
+    <div class="safarnama-messages-container">
+        {% for message in messages %}
+        <div class="safarnama-toast toast-{{ message.tags|default:'info' }}" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                {% if message.tags == 'success' %}
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="bi bi-exclamation-circle-fill text-warning fs-5"></i>
+                {% else %}
+                    <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+                {% endif %}
+                <span class="small fw-semibold">{{ message }}</span>
             </div>
+            <button type="button" class="btn-close ms-2 btn-sm" onclick="this.parentElement.remove()" aria-label="Close"></button>
         </div>
+        {% endfor %}
     </div>
+    {% endif %}
+
+    <!-- Main Content: Extends cleanly without overlapping -->
+    <main class="safarnama-main">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous">
     </script>
+    
     <script>
-        const myModal = new bootstrap.Modal(document.getElementById('myModal'))
-        const ModalBodyalbody = document.getElementById("ModalBody")
-        const ModalLabel = document.getElementById("ModalLabel")
-        "{% for message in messages %}"
-            ModalBody.innerText = "{{message}} "   
-            ModalLabel.innerText = "{{message.tags}}"
-            myModal.show()
-        "{% endfor %}"
+        // Auto-dismiss toasts after 5 seconds
+        setTimeout(() => {
+            const toasts = document.querySelectorAll('.safarnama-toast');
+            toasts.forEach(t => {
+                t.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                t.style.opacity = '0';
+                t.style.transform = 'translateY(-10px)';
+                setTimeout(() => t.remove(), 500);
+            });
+        }, 5000);
     </script>
+    {% block extra_js %}{% endblock extra_js %}
 </body>
-
 </html>
