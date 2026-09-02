@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,21 +76,27 @@ WSGI_APPLICATION = 'Safarnama.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'defaultdb',     # Replace with your Aiven database name
-        'USER': 'avnadmin',          # Replace with your Aiven database username
-        'PASSWORD': 'AVNS_ZBxpNZDSgH38UEicwgp',      # Replace with your Aiven database password
-        'HOST': 'url-shortner-arshgoel16-ba75.e.aivencloud.com',        # Replace with your Aiven database hostname
-        'PORT': '12743',        # Replace with your Aiven database port
-        'OPTIONS': {
-            'sslmode': 'require',         # Enforce SSL for Aiven connections
-        },
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=os.getenv('DB_SSL_REQUIRE', 'False').lower() in ('true', '1', 't') or 'sslmode=require' in DATABASE_URL,
+        )
     }
-}
-
+else:
+    db_path = BASE_DIR / 'db.sqlite3'
+    if os.getenv('VERCEL') and not os.access(BASE_DIR, os.W_OK):
+        db_path = Path('/tmp') / 'db.sqlite3'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': db_path,
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -138,6 +145,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build',"static")
 
+
+#arshgoel16@gmail.com
 GEMINI_API_KEY = 'AIzaSyDineiMcgB7-pu6Ok7likdo1GPPSizkNqQ'
 
 # AUTHENTICATION_BACKENDS = {

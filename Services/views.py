@@ -2,7 +2,6 @@
 from django.shortcuts import render
 import google.generativeai as genai
 from django.conf import settings
-import google.generativeai as genai
 import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -21,7 +20,7 @@ def generate_story(request):
             try:
                 genai.configure(api_key=settings.GEMINI_API_KEY)
                 # Initialize the Gemini model with the API key
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel("gemini-2.5-flash")
                 
                 # Generate content using the provided prompt
                 response = model.generate_content(prompt)
@@ -73,7 +72,7 @@ def chatbot(request):
     if request.method == 'POST':
         user_message = request.POST.get('message', '')
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(user_message+"Please provide the answer in HTML format, including appropriate HTML tags such as <h1>, <p>, <ul>, <li>, etc., for headings, paragraphs, and lists.")
         generated_text = response.text
         ind=generated_text.index("html")
@@ -98,7 +97,7 @@ def itinery(request):
 
         try:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content(prompt)
             generated_text = response.text
             print(generated_text)
