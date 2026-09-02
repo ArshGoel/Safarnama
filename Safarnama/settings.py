@@ -110,6 +110,7 @@ STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build',"static")
 
 #arshgoel16@gmail.com
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite')
 
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"
