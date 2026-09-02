@@ -111,7 +111,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build',"static")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if os.getenv('VERCEL') and not os.access(BASE_DIR, os.W_OK):
+    MEDIA_ROOT = Path('/tmp') / 'media'
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Cloudinary Storage Configuration
 CLOUDINARY_STORAGE = {

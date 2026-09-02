@@ -9,6 +9,7 @@ urlpatterns = [
     path('documentation/', views.documentation, name='documentation'),
     path('documentation/upload/', views.upload_document, name='upload_document'),
     path('documentation/view/<int:doc_id>/', views.view_document_file, name='view_document_file'),
+    path('documentation/download/<int:doc_id>/', views.download_document_file, name='download_document_file'),
     path('documentation/rename/<int:doc_id>/', views.rename_document, name='rename_document'),
     path('documentation/delete/<int:doc_id>/', views.delete_document, name='delete_document'),
     path('destination/<slug:slug>/', views.destination_detail, name='destination_detail'),

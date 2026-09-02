@@ -4,7 +4,7 @@ import json
 import mimetypes
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, FileResponse, Http404
+from django.http import JsonResponse, FileResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
@@ -220,32 +220,56 @@ def documentation(request):
 @require_POST
 def upload_document(request):
     """
-    Uploads a travel document, storing metadata in DB and file in Cloudinary.
+    Uploads a travel document safely.
+    Stores file bytes directly in the database (file_data) to guarantee compatibility with
+    Vercel's read-only serverless environment and provide free inline PDF viewing.
     """
-    file_obj = request.FILES.get('file')
-    if not file_obj:
-        return JsonResponse({'error': 'No file was provided'}, status=400)
+    try:
+        file_obj = request.FILES.get('file')
+        if not file_obj:
+            return JsonResponse({'success': False, 'error': 'No file was provided'}, status=400)
 
-    name = request.POST.get('name') or file_obj.name
-    doc = TravelDocument.objects.create(
-        user=request.user if request.user.is_authenticated else None,
-        session_key=get_session_key(request),
-        name=name,
-        file=file_obj,
-        file_size=file_obj.size
-    )
+        name = request.POST.get('name') or file_obj.name
+        file_bytes = file_obj.read()
+        file_size = len(file_bytes)
 
-    return JsonResponse({
-        'success': True,
-        'document': {
-            'id': doc.id,
-            'name': doc.name,
-            'url': doc.file.url,
-            'formatted_size': doc.formatted_size,
-            'date': doc.created_at.strftime('%Y-%m-%d'),
-            'extension': doc.extension
-        }
-    })
+        mime_type = getattr(file_obj, 'content_type', None)
+        if not mime_type or mime_type == 'application/octet-stream':
+            mime_type, _ = mimetypes.guess_type(file_obj.name)
+        if not mime_type:
+            mime_type, _ = mimetypes.guess_type(name)
+        mime_type = mime_type or 'application/pdf'
+
+        doc = TravelDocument(
+            user=request.user if request.user.is_authenticated else None,
+            session_key=get_session_key(request),
+            name=name,
+            file_data=file_bytes,
+            mime_type=mime_type,
+            file_size=file_size
+        )
+
+        # Only attempt local disk file save if NOT in Vercel serverless read-only environment
+        if not os.getenv('VERCEL'):
+            try:
+                doc.file = file_obj
+            except Exception:
+                pass
+
+        doc.save()
+
+        return JsonResponse({
+            'success': True,
+            'document': {
+                'id': doc.id,
+                'name': doc.name,
+                'formatted_size': doc.formatted_size,
+                'date': doc.created_at.strftime('%Y-%m-%d'),
+                'extension': doc.extension
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Upload failed: {str(e)}"}, status=500)
 
 
 @require_POST
@@ -277,7 +301,8 @@ def delete_document(request, doc_id):
     doc = get_object_or_404(TravelDocument, **filter_kwargs)
 
     try:
-        doc.file.delete(save=False)
+        if doc.file:
+            doc.file.delete(save=False)
     except Exception:
         pass
 
@@ -287,26 +312,59 @@ def delete_document(request, doc_id):
 
 def view_document_file(request, doc_id):
     """
-    Streams the uploaded document or PDF directly with inline Content-Disposition,
-    allowing in-browser native PDF viewing with zero Cloudinary plan restrictions.
+    Streams the uploaded document or PDF directly from database binary with inline Content-Disposition,
+    allowing in-browser native PDF viewing on Vercel and locally with zero external tier restrictions.
     """
     filter_kwargs = get_user_filter_kwargs(request)
     filter_kwargs['id'] = doc_id
     doc = get_object_or_404(TravelDocument, **filter_kwargs)
 
+    # 1. Primary: stream directly from database binary
+    if doc.file_data:
+        response = HttpResponse(bytes(doc.file_data), content_type=doc.mime_type or 'application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{doc.name}"'
+        response['X-Frame-Options'] = 'SAMEORIGIN'
+        return response
+
+    # 2. Fallback: stream from local file if exists
     try:
-        file_path = doc.file.path
-        if os.path.exists(file_path):
-            mime_type, _ = mimetypes.guess_type(doc.file.name)
-            mime_type = mime_type or 'application/pdf'
-            response = FileResponse(open(file_path, 'rb'), content_type=mime_type)
+        if doc.file and os.path.exists(doc.file.path):
+            response = FileResponse(open(doc.file.path, 'rb'), content_type=doc.mime_type or 'application/pdf')
             response['Content-Disposition'] = f'inline; filename="{doc.name}"'
             response['X-Frame-Options'] = 'SAMEORIGIN'
             return response
     except Exception:
         pass
 
-    return redirect(doc.file.url)
+    if doc.file:
+        return redirect(doc.file.url)
+    raise Http404("Document content not found.")
+
+
+def download_document_file(request, doc_id):
+    """
+    Direct download endpoint streaming file bytes as attachment.
+    """
+    filter_kwargs = get_user_filter_kwargs(request)
+    filter_kwargs['id'] = doc_id
+    doc = get_object_or_404(TravelDocument, **filter_kwargs)
+
+    if doc.file_data:
+        response = HttpResponse(bytes(doc.file_data), content_type=doc.mime_type or 'application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{doc.name}"'
+        return response
+
+    try:
+        if doc.file and os.path.exists(doc.file.path):
+            response = FileResponse(open(doc.file.path, 'rb'), content_type=doc.mime_type or 'application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{doc.name}"'
+            return response
+    except Exception:
+        pass
+
+    if doc.file:
+        return redirect(doc.file.url)
+    raise Http404("Document content not found.")
 
 
 DESTINATION_TEMPLATES = {

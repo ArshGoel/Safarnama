@@ -1,11 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
 import os
-
-# Dedicated local media storage for documents & PDFs to avoid Cloudinary free plan raw PDF delivery blocks
-local_document_storage = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
 
 
 class ChatMessage(models.Model):
@@ -27,7 +22,9 @@ class TravelDocument(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='travel_documents')
     session_key = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     name = models.CharField(max_length=255)
-    file = models.FileField(upload_to='travel_documents/', storage=local_document_storage)
+    file = models.FileField(upload_to='travel_documents/', null=True, blank=True)
+    file_data = models.BinaryField(null=True, blank=True, help_text="In-database binary storage for serverless Vercel and free PDF viewing")
+    mime_type = models.CharField(max_length=100, default='application/pdf')
     file_size = models.IntegerField(default=0, help_text="File size in bytes")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,5 +46,5 @@ class TravelDocument(models.Model):
 
     @property
     def extension(self):
-        _, ext = os.path.splitext(self.file.name)
+        _, ext = os.path.splitext(self.name)
         return ext.lower()

@@ -155,7 +155,7 @@
                             <a href="{% url 'view_document_file' doc.id %}" target="_blank" class="btn btn-outline-info btn-sm rounded-pill px-3" title="Open full screen in new tab">
                                 <i class="bi bi-box-arrow-up-right me-1"></i> Tab
                             </a>
-                            <a href="{% url 'view_document_file' doc.id %}" download="{{ doc.name }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                            <a href="{% url 'download_document_file' doc.id %}" class="btn btn-outline-success btn-sm rounded-pill px-3">
                                 <i class="bi bi-download me-1"></i> Download
                             </a>
                             <button class="btn btn-outline-danger btn-sm rounded-pill px-2" onclick="deleteDocument({{ doc.id }})">
@@ -217,21 +217,28 @@
             },
             body: formData
         })
-        .then(res => res.json())
+        .then(async res => {
+            const isJson = res.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await res.json() : null;
+            if (!res.ok) {
+                const errorMsg = data?.error || `Upload failed with HTTP ${res.status}`;
+                throw new Error(errorMsg);
+            }
+            return data;
+        })
         .then(data => {
             spinner.classList.add('hidden');
             uploadBtnText.textContent = "Upload Document";
-            if (data.success) {
-                // Reload or dynamically append
+            if (data && data.success) {
                 window.location.reload();
             } else {
-                alert(data.error || "Upload failed. Please try again.");
+                alert(data?.error || "Upload failed. Please try again.");
             }
         })
         .catch(err => {
             spinner.classList.add('hidden');
             uploadBtnText.textContent = "Upload Document";
-            alert("Upload error: " + err);
+            alert("Upload error: " + err.message);
         });
     });
 
