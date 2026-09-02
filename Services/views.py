@@ -1,4 +1,5 @@
 import os
+import io
 import re
 import json
 import mimetypes
@@ -8,6 +9,8 @@ from django.http import JsonResponse, FileResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
+import cloudinary
+import cloudinary.uploader
 from google import genai
 from google.genai import types
 
@@ -249,12 +252,19 @@ def upload_document(request):
             file_size=file_size
         )
 
-        # Only attempt local disk file save if NOT in Vercel serverless read-only environment
-        if not os.getenv('VERCEL'):
+        # If file is an image and Cloudinary is configured, upload directly to Cloudinary!
+        is_image = mime_type.startswith('image/')
+        if is_image and os.getenv('CLOUDINARY_CLOUD_NAME'):
             try:
-                doc.file = file_obj
-            except Exception:
-                pass
+                cloud_res = cloudinary.uploader.upload(
+                    io.BytesIO(file_bytes),
+                    folder='travel_documents/images',
+                    resource_type='image'
+                )
+                if cloud_res and cloud_res.get('secure_url'):
+                    doc.cloudinary_url = cloud_res.get('secure_url')
+            except Exception as c_err:
+                print(f"Cloudinary upload warning: {c_err}")
 
         doc.save()
 
@@ -265,7 +275,9 @@ def upload_document(request):
                 'name': doc.name,
                 'formatted_size': doc.formatted_size,
                 'date': doc.created_at.strftime('%Y-%m-%d'),
-                'extension': doc.extension
+                'extension': doc.extension,
+                'is_image': is_image,
+                'cloudinary_url': doc.cloudinary_url
             }
         })
     except Exception as e:
@@ -295,10 +307,21 @@ def rename_document(request, doc_id):
 
 @require_POST
 def delete_document(request, doc_id):
-    """Deletes a travel document from database and storage."""
+    """Deletes a travel document from database, local storage, and Cloudinary."""
     filter_kwargs = get_user_filter_kwargs(request)
     filter_kwargs['id'] = doc_id
     doc = get_object_or_404(TravelDocument, **filter_kwargs)
+
+    # Delete from Cloudinary if hosted there
+    if doc.cloudinary_url:
+        try:
+            parts = doc.cloudinary_url.split('/upload/')[-1].split('/')
+            if parts[0].startswith('v') and parts[0][1:].isdigit():
+                parts = parts[1:]
+            public_id = '/'.join(parts).rsplit('.', 1)[0]
+            cloudinary.uploader.destroy(public_id)
+        except Exception as c_err:
+            print(f"Cloudinary delete warning: {c_err}")
 
     try:
         if doc.file:
@@ -313,20 +336,23 @@ def delete_document(request, doc_id):
 def view_document_file(request, doc_id):
     """
     Streams the uploaded document or PDF directly from database binary with inline Content-Disposition,
-    allowing in-browser native PDF viewing on Vercel and locally with zero external tier restrictions.
+    or redirects to Cloudinary for images.
     """
     filter_kwargs = get_user_filter_kwargs(request)
     filter_kwargs['id'] = doc_id
     doc = get_object_or_404(TravelDocument, **filter_kwargs)
 
-    # 1. Primary: stream directly from database binary
+    # 1. Cloudinary CDN for images
+    if doc.cloudinary_url:
+        return redirect(doc.cloudinary_url)
+
+    # 2. Database binary stream (PDFs, docs, local fallback)
     if doc.file_data:
         response = HttpResponse(bytes(doc.file_data), content_type=doc.mime_type or 'application/pdf')
         response['Content-Disposition'] = f'inline; filename="{doc.name}"'
         response['X-Frame-Options'] = 'SAMEORIGIN'
         return response
 
-    # 2. Fallback: stream from local file if exists
     try:
         if doc.file and os.path.exists(doc.file.path):
             response = FileResponse(open(doc.file.path, 'rb'), content_type=doc.mime_type or 'application/pdf')
@@ -353,6 +379,9 @@ def download_document_file(request, doc_id):
         response = HttpResponse(bytes(doc.file_data), content_type=doc.mime_type or 'application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{doc.name}"'
         return response
+
+    if doc.cloudinary_url:
+        return redirect(doc.cloudinary_url)
 
     try:
         if doc.file and os.path.exists(doc.file.path):

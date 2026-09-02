@@ -23,6 +23,7 @@ class TravelDocument(models.Model):
     session_key = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='travel_documents/', null=True, blank=True)
+    cloudinary_url = models.URLField(max_length=500, null=True, blank=True, help_text="Cloudinary CDN URL for image assets")
     file_data = models.BinaryField(null=True, blank=True, help_text="In-database binary storage for serverless Vercel and free PDF viewing")
     mime_type = models.CharField(max_length=100, default='application/pdf')
     file_size = models.IntegerField(default=0, help_text="File size in bytes")
